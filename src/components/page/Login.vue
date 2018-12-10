@@ -56,16 +56,36 @@
                               username: this.ruleForm.username,
                               password: this.ruleForm.password
                             })
-                            .then(successResponse => {
-                              this.responseResult = JSON.stringify(successResponse.data)
+                            /*.then(successResponse => {
+                              this.responseResult = JSON.stringify(successResponse.data);
                               alert(responseResult);
                               if (successResponse.data.code === 200) {
-                                /*this.$router.replace({path: '/'})*/
-                                 this.$router.push('/');
+                                this.$router.replace({path: '/dashboard'})
+                                /* this.$router.push('/');
                               }
                             })
-                            .catch(failResponse => {}
-                );
+
+
+                            .catch(failResponse => {}*/
+                            .then(function (response) {
+                                    console.log(response);
+                                    if (response.data.code===200) {
+                                        console.log("Oj")
+                                        localStorage.setItem('ms_username',this.ruleForm.username);
+                                        this.$router.push('/');
+                                    }
+                                    else if(response.data.code===400){
+                                        console.log("登陆错误")
+                                        this.messageTip=true;
+                                    }
+                                  }.bind(this))
+                            .catch(function (error) {
+                                
+                              }.bind(this)
+                              );
+
+
+                ;
             }
         }
     }
