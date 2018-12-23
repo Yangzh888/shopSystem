@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
         }
     }
 })
-
+router. push('components' )
 new Vue({
     router,
     render: h => h(App)

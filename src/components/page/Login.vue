@@ -17,7 +17,53 @@
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
                 <p class="login-tips">Tips : 用户名和密码不能为空。</p>
+                
             </el-form>
+            <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
+
+                    <el-dialog title="注册店铺账号" :visible.sync="dialogFormVisible" center>
+                     <el-form ref="form" :model="form" label-width="110px">
+                      <el-form-item label="商铺名称：">
+                        <el-input v-model="form.name"  maxlength='50px'></el-input>
+                      </el-form-item>
+                        <el-form-item label="账号：">
+                        <el-input v-model="form.userId" ></el-input>
+                      </el-form-item>
+                     <el-form-item label="密码：">
+                        <el-input v-model="form.password"></el-input>
+                      </el-form-item>
+                     
+                      <el-form-item label="商铺性质：">
+                        <el-checkbox-group v-model="form.type">
+                          <el-checkbox label="食品/厨房用品" name="type"></el-checkbox>
+                          <el-checkbox label="生活用品" name="type"></el-checkbox>
+                          <el-checkbox label="穿着用品" name="type"></el-checkbox>
+                          <el-checkbox label="家具类" name="type"></el-checkbox>
+                          <el-checkbox label="其他性质" name="type"></el-checkbox>
+                        </el-checkbox-group>
+                      </el-form-item>
+                      <el-form-item label="联系电话：">
+                        <el-input v-model="form.phone"></el-input>
+                      </el-form-item>
+                      <el-form-item label="忘记密码提示">
+                            <el-select v-model="form.region" placeholder="请选择问题">
+                              <el-option label="你的生日" value="birthday"></el-option>
+                              <el-option label="你父亲的名字" value="fatherName"></el-option>
+                              <el-option label="你母亲的名字" value="motherName"></el-option>
+                              <el-option label="你小学学校的名字" value="schoolName"></el-option>
+                            </el-select>
+                          </el-form-item>
+                       <el-form-item label="答案：">
+                        <el-input v-model="form.answer"></el-input>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="primary"  @click="onSubmit">立即创建</el-button>                    
+                      </el-form-item>
+                    </el-form>
+                      <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取 消</el-button>
+                      </div>
+                    </el-dialog>
         </div>
     </div>
 </template>
@@ -26,10 +72,22 @@
     export default {
         data: function(){
             return {
+                dialogFormVisible: false,
                 ruleForm: {
                     username: '',
                     password: ''
                 },
+                form: {
+                      name: '',
+                      userId: '',
+                      password: '',
+                      type: [],
+                      request:'',
+                      answer:'',
+                      phone:''
+                     
+        },
+                formLabelWidth: '120px',
                 rules: {
                     username: [
                         { required: true, message: '请输入用户名', trigger: 'blur' }
@@ -53,7 +111,7 @@
                 }*/
                     this.$axios
                             .post('/login', {
-                              username: this.ruleForm.username,
+                              userId: this.ruleForm.username,
                               password: this.ruleForm.password
                             })
                             /*.then(successResponse => {
@@ -83,10 +141,10 @@
                                 
                               }.bind(this)
                               );
-
-
-                ;
-            }
+          },
+           onSubmit() {
+        console.log('submit!');
+      }
         }
     }
 </script>
@@ -104,7 +162,7 @@
         line-height: 50px;
         text-align: center;
         font-size:20px;
-        color: #fff;
+        color: #155;
         border-bottom: 1px solid #ddd;
     }
     .ms-login{
@@ -132,5 +190,10 @@
         font-size:12px;
         line-height:30px;
         color:#305;
+    }
+    .resiget{
+        position: absolute;
+        left: 70%;
+        color: yellow;
     }
 </style>

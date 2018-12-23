@@ -94,6 +94,11 @@ export default new Router({
         {
             path: '*',
             redirect: '/404'
+        },
+        {
+            path:'/resiget',
+             redirect:'resiget',
+            component:resolve => require(['../components/page/resiget.vue'], resolve)
         }
     ]
 })
