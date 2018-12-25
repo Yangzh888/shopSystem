@@ -24,9 +24,12 @@
                     <el-dialog title="注册店铺账号" :visible.sync="dialogFormVisible" center>
                      <el-form ref="form" :model="form" label-width="110px">
                       <el-form-item label="商铺名称：">
-                        <el-input v-model="form.name"  maxlength='50px'></el-input>
+                        <el-input v-model="form.shopName"  maxlength='50px'></el-input>
                       </el-form-item>
-                        <el-form-item label="账号：">
+                       <el-form-item label="昵称：">
+                        <el-input v-model="form.username" ></el-input>
+                      </el-form-item>
+                        <el-form-item label="登录账号：">
                         <el-input v-model="form.userId" ></el-input>
                       </el-form-item>
                      <el-form-item label="密码：">
@@ -43,10 +46,10 @@
                         </el-checkbox-group>
                       </el-form-item>
                       <el-form-item label="联系电话：">
-                        <el-input v-model="form.phone"></el-input>
+                        <el-input v-model="form.userPhone"></el-input>
                       </el-form-item>
                       <el-form-item label="忘记密码提示">
-                            <el-select v-model="form.region" placeholder="请选择问题">
+                            <el-select v-model="form.forgetQue" placeholder="请选择问题">
                               <el-option label="你的生日" value="birthday"></el-option>
                               <el-option label="你父亲的名字" value="fatherName"></el-option>
                               <el-option label="你母亲的名字" value="motherName"></el-option>
@@ -54,10 +57,10 @@
                             </el-select>
                           </el-form-item>
                        <el-form-item label="答案：">
-                        <el-input v-model="form.answer"></el-input>
+                        <el-input v-model="form.forgetAns"></el-input>
                       </el-form-item>
                       <el-form-item>
-                        <el-button type="primary"  @click="onSubmit">立即创建</el-button>                    
+                        <el-button type="primary"  @click="register()">立即创建</el-button>                    
                       </el-form-item>
                     </el-form>
                       <div slot="footer" class="dialog-footer">
@@ -78,13 +81,15 @@
                     password: ''
                 },
                 form: {
-                      name: '',
+                      shopName:'',
+                      username: '',
                       userId: '',
                       password: '',
                       type: [],
-                      request:'',
-                      answer:'',
-                      phone:''
+                      forgetQue:'',
+                      forgetAns:'',
+                      userPhone:''
+                     
                      
         },
                 formLabelWidth: '120px',
@@ -142,8 +147,35 @@
                               }.bind(this)
                               );
           },
-           onSubmit() {
-        console.log('submit!');
+           register() {
+                            this
+                            .$axios
+                            .post('/register', {
+                                shopName:this.form .shopName,
+                                username:this.form .username,
+                                userId:this.form .userId,
+                                password:this.form .password,
+                                forgetQue:this.form .forgetQue,
+                                forgetAns:this.form .forgetAns,
+                                userPhone:this.form .userPhone,
+
+                            })
+                            .then(function (response) {
+                                    console.log(response);
+                                    if (response.data.code===200) {
+                                        console.log("Oj")
+                                        alert("注册成功")
+                                        this.$router.push('login');
+                                    }
+                                    else if(response.data.code===400){
+                                        console.log("登陆错误")
+                                        this.messageTip=true;
+                                    }
+                                  }.bind(this))
+                            .catch(function (error) {
+                                
+                              }.bind(this)
+                              );
       }
         }
     }
