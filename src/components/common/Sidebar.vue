@@ -46,12 +46,12 @@
                     {
                         icon: 'el-icon-lx-cascades',
                         index: 'table',
-                        title: '基础表格'
+                        title: '商品管理'
                     },
                     {
                         icon: 'el-icon-lx-copy',
                         index: 'tabs',
-                        title: 'tab选项卡'
+                        title: '客户管理'
                     },
                     {
                         icon: 'el-icon-lx-calendar',
@@ -85,22 +85,22 @@
                     {
                         icon: 'el-icon-lx-emoji',
                         index: 'icon',
-                        title: '自定义图标'
+                        title: '收支记录'
                     },
                     {
                         icon: 'el-icon-lx-favor',
                         index: 'charts',
-                        title: 'schart图表'
+                        title: '数据展示'
                     },
                     {
                         icon: 'el-icon-rank',
                         index: 'drag',
-                        title: '拖拽列表'
+                        title: '权限管理'
                     },
                     {
                         icon: 'el-icon-lx-warn',
                         index: '6',
-                        title: '错误处理',
+                        title: '个人信息',
                         subs: [
                             {
                                 index: 'permission',

@@ -17,7 +17,7 @@
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
                 <p class="login-tips">Tips : 用户名和密码不能为空。</p>
-                
+                 <el-button type="primary"  @click="getuserInfo()">立即创建</el-button>  
             </el-form>
             <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
 
@@ -66,8 +66,10 @@
                       <div slot="footer" class="dialog-footer">
                         <el-button @click="dialogFormVisible = false">取 消</el-button>
                       </div>
+
                     </el-dialog>
         </div>
+        
     </div>
 </template>
 
@@ -133,8 +135,7 @@
                             .then(function (response) {
                                     console.log(response);
                                     if (response.data.code===200) {
-                                        console.log("Oj")
-                                        localStorage.setItem('ms_username',this.ruleForm.username);
+                                        localStorage.setItem('ms_username',response.data.data.username);
                                         this.$router.push('/');
                                     }
                                     else if(response.data.code===400){
@@ -147,7 +148,7 @@
                               }.bind(this)
                               );
           },
-           register() {
+            register() {
                             this
                             .$axios
                             .post('/register', {
@@ -176,7 +177,7 @@
                                 
                               }.bind(this)
                               );
-      }
+          }
         }
     }
 </script>
