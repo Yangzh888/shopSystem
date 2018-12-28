@@ -10,20 +10,20 @@
                             <div>{{role}}</div>
                         </div>
                     </div>
-                    <div class="user-info-list">上次登录时间：<span>2018-01-01</span></div>
-                    <div class="user-info-list">上次登录地点：<span>东莞</span></div>
+                    <div class="user-info-list">商铺:    <span>{{    shopName}}</span></div>
+                   
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
                     <div slot="header" class="clearfix">
-                        <span>语言详情</span>
+                        <span>热销物品存货情况</span>
                     </div>
-                    Vue
+                    江苏大米
                     <el-progress :percentage="71.3" color="#42b983"></el-progress>
-                    JavaScript
+                    金龙鱼5l花生油
                     <el-progress :percentage="24.1" color="#f1e05a"></el-progress>
-                    CSS
+                    黄豆100KG
                     <el-progress :percentage="3.7"></el-progress>
-                    HTML
+                    海天生抽1.8L
                     <el-progress :percentage="0.9" color="#f56c6c"></el-progress>
                 </el-card>
             </el-col>
@@ -76,7 +76,7 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}</div>
+                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}{{title1}}</div>
                             </template>
                         </el-table-column>
                         <el-table-column width="60">
@@ -109,71 +109,44 @@
     import bus from '../common/bus';
     export default {
         name: 'dashboard',
+        shopName:'dashboard',
+        userId:'',
+        mounted: function() {
+        this.getOthersDate();
+        },
         data() {
             return {
+            	title1:'11',
                 name: localStorage.getItem('ms_username'),
+                shopName:localStorage.getItem('shopName'),
+                userId:localStorage.getItem('userId'),
                 todoList: [{
-                        title: '今天要修复100个bug',
+                        title: '广州工业大学龙洞校区送货单待配货',
                         status: false,
-                    },
+                    } ,
                     {
-                        title: '今天要修复100个bug',
+                        title: '太阳城经济区88栋待配货',
                         status: false,
-                    },
-                    {
-                        title: '今天要写100行代码加几个bug吧',
-                        status: false,
-                    }, {
-                        title: '今天要修复100个bug',
-                        status: false,
-                    },
-                    {
-                        title: '今天要修复100个bug',
-                        status: true,
-                    },
-                    {
-                        title: '今天要写100行代码加几个bug吧',
-                        status: true,
-                    }
+                    }                  
                 ],
                 data: [{
                         name: '2018/09/04',
                         value: 1083
-                    },
-                    {
+                    },{
                         name: '2018/09/05',
-                        value: 941
-                    },
-                    {
-                        name: '2018/09/06',
-                        value: 1139
-                    },
-                    {
-                        name: '2018/09/07',
-                        value: 816
-                    },
-                    {
-                        name: '2018/09/08',
-                        value: 327
-                    },
-                    {
-                        name: '2018/09/09',
-                        value: 228
-                    },
-                    {
-                        name: '2018/09/10',
-                        value: 1065
+                        value: 1888
                     }
                 ],
                 options: {
-                    title: '最近七天每天的用户访问量',
+                    title: '最近七天每天的是入账金额',
                     showValue: false,
                     fillColor: 'rgb(45, 140, 240)',
                     bottomPadding: 30,
                     topPadding: 30
                 },
                 options2: {
-                    title: '最近七天用户访问趋势',
+                    title: '最近七天每天的是出账金额',
+                    showValue: false,
                     fillColor: '#FC6FA1',
                     axisColor: '#008ACD',
                     contentColor: '#EEEEEE',
@@ -223,6 +196,21 @@
             renderChart(){
                 this.$refs.bar.renderChart();
                 this.$refs.line.renderChart();
+            },
+            getOthersDate(){
+            	
+               				this
+                            .$axios
+                            .post('/others/getOthersDate', {
+                            	userId:this.userId                          	
+                            })
+                            .then((response)=> {                                                          
+                                 console.log(response.data.length)
+                                  })
+                            .catch(function (error) {
+                              }.bind(this)
+                              );
+                            
             }
         }
     }
@@ -313,8 +301,8 @@
     }
 
     .user-info-list {
-        font-size: 14px;
-        color: #999;
+        font-size: 22px;
+        color: #222;
         line-height: 25px;
     }
 

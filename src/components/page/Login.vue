@@ -17,7 +17,7 @@
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
                 <p class="login-tips">Tips : 用户名和密码不能为空。</p>
-                 <el-button type="primary"  @click="getuserInfo()">立即创建</el-button>  
+               
             </el-form>
             <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
 
@@ -66,8 +66,17 @@
                       <div slot="footer" class="dialog-footer">
                         <el-button @click="dialogFormVisible = false">取 消</el-button>
                       </div>
-
                     </el-dialog>
+                    <el-dialog
+  title="提示"
+  :visible.sync="centerDialogVisible"
+  width="30%"
+  center>
+  <span style="font-weight:center">{{messageTip}}</span>
+  <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+  </span>
+</el-dialog>
         </div>
         
     </div>
@@ -78,6 +87,8 @@
         data: function(){
             return {
                 dialogFormVisible: false,
+                messageTip:'',
+                centerDialogVisible:false,
                 ruleForm: {
                     username: '',
                     password: ''
@@ -117,7 +128,7 @@
                     }
                 }*/
                     this.$axios
-                            .post('/login', {
+                            .post('/userInfo/login', {
                               userId: this.ruleForm.username,
                               password: this.ruleForm.password
                             })
@@ -136,22 +147,28 @@
                                     console.log(response);
                                     if (response.data.code===200) {
                                         localStorage.setItem('ms_username',response.data.data.username);
+                                        localStorage.setItem('shopName',response.data.data.shopName);
+                                        localStorage.setItem('userId',response.data.data.userId);
+
                                         this.$router.push('/');
                                     }
                                     else if(response.data.code===400){
+                                        this.messageTip='账号或密码错误，请重新登录！';
                                         console.log("登陆错误")
-                                        this.messageTip=true;
+                                        this.centerDialogVisible=true;
                                     }
                                   }.bind(this))
                             .catch(function (error) {
-                                
+                                 this.messageTip='账号或密码错误，请重新登录！';
+                                        console.log("登陆错误")
+                                        this.centerDialogVisible=true;
                               }.bind(this)
                               );
           },
             register() {
                             this
                             .$axios
-                            .post('/register', {
+                            .post('/userInfo/register', {
                                 shopName:this.form .shopName,
                                 username:this.form .username,
                                 userId:this.form .userId,
