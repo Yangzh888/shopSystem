@@ -66,22 +66,27 @@
                 <el-card shadow="hover" style="height:403px;">
                     <div slot="header" class="clearfix">
                         <span>待办事项</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
+                        <el-button style="float: right; padding: 3px 0" type="text" @click="showAddReadyDo = true">添加</el-button>
                     </div>
                     <el-table :data="todoList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
-                        <el-table-column width="40">
+                        <el-table-column width="40" >
                             <template slot-scope="scope">
                                 <el-checkbox v-model="scope.row.status"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column>
-                            <template slot-scope="scope">
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}{{title1}}</div>
+                            <template slot-scope="scope" >
+                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}</div>
                             </template>
                         </el-table-column>
+                        <el-table-column>
+                            <template slot-scope="scope">
+                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.createTime|moment}}</div>
+                            </template>
+                        </el-table-column> 
                         <el-table-column width="60">
                             <template slot-scope="scope">
-                                <i class="el-icon-edit"></i>
+                              <a href="#">  <i class="el-icon-edit"></i></a>
                                 <i class="el-icon-delete"></i>
                             </template>
                         </el-table-column>
@@ -101,6 +106,30 @@
                 </el-card>
             </el-col>
         </el-row>
+
+        <el-dialog
+				  title="提示"
+				  :visible.sync="showAddReadyDo"
+				  width="30%"
+				  center>
+						 <el-form :label-position="left" label-width="80px" :model="formLabelAlign">
+						  <el-form-item label="标题">
+						    <el-input v-model="formLabelAlign.title"></el-input>
+						  </el-form-item>
+						     <el-form-item label="创建时间">
+						    <span class="demonstration"></span>
+							    <el-date-picker
+							      v-model="formLabelAlign.date"
+							      type="datetime"
+							      placeholder="选择日期时间">
+							    </el-date-picker>
+						  </el-form-item>
+						</el-form>
+				  <span slot="footer" class="dialog-footer">
+				    <el-button @click="showAddReadyDo = false">取 消</el-button>
+				    <el-button type="primary"  @click="saveReadyDo()" >确 定</el-button>
+				  </span>
+		</el-dialog>
     </div>
 </template>
 
@@ -116,19 +145,17 @@
         },
         data() {
             return {
-            	title1:'11',
-                name: localStorage.getItem('ms_username'),
+            	left:'left',  //代办弹出层的对齐方式
+                name: localStorage.getItem('ms_username'),       //获取存在localStorage的值
                 shopName:localStorage.getItem('shopName'),
                 userId:localStorage.getItem('userId'),
-                todoList: [{
-                        title: '广州工业大学龙洞校区送货单待配货',
-                        status: false,
-                    } ,
-                    {
-                        title: '太阳城经济区88栋待配货',
-                        status: false,
-                    }                  
+                showAddReadyDo:false,            //设置代办弹框为false，点击为true显示
+                todoList: [            
                 ],
+                formLabelAlign: {
+						          title: '',
+						          date:''
+						        },
                 data: [{
                         name: '2018/09/04',
                         value: 1083
@@ -137,15 +164,17 @@
                         value: 1888
                     }
                 ],
+      
+
                 options: {
-                    title: '最近七天每天的是入账金额',
+                    title: '最近七天每天入账金额',
                     showValue: false,
                     fillColor: 'rgb(45, 140, 240)',
                     bottomPadding: 30,
                     topPadding: 30
                 },
                 options2: {
-                    title: '最近七天每天的是出账金额',
+                    title: '最近七天每天出账金额',
                     showValue: false,
                     fillColor: '#FC6FA1',
                     axisColor: '#008ACD',
@@ -205,12 +234,30 @@
                             	userId:this.userId                          	
                             })
                             .then((response)=> {                                                          
-                                 console.log(response.data.length)
+                                 console.log(response.data)
+                                this.todoList=response.data
+
                                   })
                             .catch(function (error) {
                               }.bind(this)
                               );
                             
+            },
+            saveReadyDo(){
+            	this
+                            .$axios
+                            .post('/others/saveReadyDo', {
+                            	userId:this.userId ,
+                            	formLabelAlign:this.formLabelAlign                       	
+                            })
+                            .then((response)=> {                                                          
+                                 console.log(response.data)
+                                location. reload()
+
+                                  })
+                            .catch(function (error) {
+                              }.bind(this)
+                              );
             }
         }
     }

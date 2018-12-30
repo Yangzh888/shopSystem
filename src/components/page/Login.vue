@@ -19,7 +19,7 @@
                 <p class="login-tips">Tips : 用户名和密码不能为空。</p>
                
             </el-form>
-            <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
+            <el-button type="text" @click="dialogFormVisible = true">去注册</el-button>
 
                     <el-dialog title="注册店铺账号" :visible.sync="dialogFormVisible" center>
                      <el-form ref="form" :model="form" label-width="110px">
@@ -184,6 +184,7 @@
                                         console.log("Oj")
                                         alert("注册成功")
                                         this.$router.push('login');
+                                        this.dialogFormVisible=false;
                                     }
                                     else if(response.data.code===400){
                                         console.log("登陆错误")

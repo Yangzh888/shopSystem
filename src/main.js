@@ -4,7 +4,12 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../static/css/icon.css';
-import "babel-polyfill";
+import "babel-polyfill";import moment from 'moment/moment'
+Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+return moment(value).format(formatString);
+
+});
 // 引用axios，并设置基础URL为后端服务api地址
 var axios = require('axios')
 axios.defaults.baseURL = 'http://localhost:8443/api'
