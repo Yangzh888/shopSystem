@@ -182,13 +182,15 @@
                                     console.log(response);
                                     if (response.data.code===200) {
                                         console.log("Oj")
-                                        alert("注册成功")
+                                        this.messageTip=response.data.message;
                                         this.$router.push('login');
+                                        this.centerDialogVisible=true;
                                         this.dialogFormVisible=false;
                                     }
                                     else if(response.data.code===400){
                                         console.log("登陆错误")
-                                        this.messageTip=true;
+                                        this.messageTip=response.data.message;
+                                        this.centerDialogVisible=true;
                                     }
                                   }.bind(this))
                             .catch(function (error) {

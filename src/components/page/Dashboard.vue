@@ -108,7 +108,7 @@
         </el-row>
 
         <el-dialog
-				  title="提示"
+				  title="创建待办"
 				  :visible.sync="showAddReadyDo"
 				  width="30%"
 				  center>

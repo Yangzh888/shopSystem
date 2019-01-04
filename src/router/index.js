@@ -21,7 +21,7 @@ export default new Router({
                 },
                 {
                     path: '/icon',
-                    component: resolve => require(['../components/page/Icon.vue'], resolve),
+                    component: resolve => require(['../components/page/ComeAndOut.vue'], resolve),
                     meta: { title: '自定义图标' }
                 },
                 {
@@ -94,11 +94,7 @@ export default new Router({
         {
             path: '*',
             redirect: '/404'
-        },
-        {
-            path:'/resiget',
-             redirect:'resiget',
-            component:resolve => require(['../components/page/resiget.vue'], resolve)
         }
+        
     ]
 })
