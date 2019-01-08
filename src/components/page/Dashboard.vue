@@ -108,7 +108,7 @@
         </el-row>
 
         <el-dialog
-				  title="创建待办"
+				  title="提示"
 				  :visible.sync="showAddReadyDo"
 				  width="30%"
 				  center>
@@ -167,14 +167,14 @@
       
 
                 options: {
-                    title: '最近七天每天入账金额',
+                    title: '最近七天每天入账金额（元）',
                     showValue: false,
                     fillColor: 'rgb(45, 140, 240)',
                     bottomPadding: 30,
                     topPadding: 30
                 },
                 options2: {
-                    title: '最近七天每天出账金额',
+                    title: '最近七天每天出账金额（元）',
                     showValue: false,
                     fillColor: '#FC6FA1',
                     axisColor: '#008ACD',

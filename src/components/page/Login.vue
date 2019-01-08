@@ -68,15 +68,15 @@
                       </div>
                     </el-dialog>
                     <el-dialog
-  title="提示"
-  :visible.sync="centerDialogVisible"
-  width="30%"
-  center>
-  <span style="font-weight:center">{{messageTip}}</span>
-  <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
-  </span>
-</el-dialog>
+                          title="提示"
+                          :visible.sync="centerDialogVisible"
+                          width="30%"
+                          center>
+                          <span style="font-weight:center">{{messageTip}}</span>
+                          <span slot="footer" class="dialog-footer">
+                            <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+                          </span>
+                    </el-dialog>
         </div>
         
     </div>
