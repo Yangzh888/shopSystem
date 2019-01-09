@@ -137,6 +137,7 @@
     import Schart from 'vue-schart';
     import bus from '../common/bus';
     export default {
+        inject:['reload'],
         name: 'dashboard',
         shopName:'dashboard',
         userId:'',
@@ -252,7 +253,7 @@
                             })
                             .then((response)=> {                                                          
                                  console.log(response.data)
-                                location. reload()
+                                this.reload()
 
                                   })
                             .catch(function (error) {

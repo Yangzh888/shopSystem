@@ -12,29 +12,40 @@
                 <el-input  placeholder="筛选关键词" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="search" s>搜索</el-button>
             </div>
-             <el-table :data="tableData" :show-header="false" height="304" style="width: 100%;font-size:14px;">
-                        <el-table-column width="40" >
-                            <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.status"></el-checkbox>
-                            </template>
-                        </el-table-column>
-                        <el-table-column>
-                            <template slot-scope="scope" >
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.createTime}}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column>
-                            <template slot-scope="scope">
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.inSum}}</div>
-                            </template>
-                        </el-table-column> 
-                        <el-table-column width="60">
-                            <template slot-scope="scope">
-                              <a href="#">  <i class="el-icon-edit"></i></a>
-                                <i class="el-icon-delete"></i>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+             
+                    <el-table
+    :data="tableData"
+    stripe
+    style="width: 100%">
+    <el-table-column
+      label="记录日期"
+      width="180">
+        <template slot-scope="scope" >
+         <div>{{scope.row.createTime|moment1}}</div>
+         </template>
+    </el-table-column>
+    <el-table-column
+      prop="inSum"
+      label="当天营业额(元)"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="outSum"
+      label="当天支出(元)">
+    </el-table-column>
+  </el-table>
+  <div class="block">
+    
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage4"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="10"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="40">
+    </el-pagination>
+  </div>
         </div>
 
         <!-- 编辑弹出框 -->
@@ -129,7 +140,13 @@
                                 console.log(error.data)
                               }.bind(this)
                               );
-            }
+            },
+            handleSizeChange(val) {
+                     console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange(val) {
+             console.log(`当前页: ${val}`);
+             }
         }
     }
 
