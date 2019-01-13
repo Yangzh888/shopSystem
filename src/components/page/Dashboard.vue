@@ -96,12 +96,12 @@
             <el-row :gutter="20">
                 <el-col :span="12">
                     <el-card shadow="hover">
-                        <schart ref="bar" class="schart" canvasId="bar" :data="data" type="bar" :options="options"></schart>
+                        <schart ref="bar" class="schart" canvasId="bar" :data="InComeList" type="bar" :options="options"></schart>
                     </el-card>
                 </el-col>
                 <el-col :span="12">
                     <el-card shadow="hover">
-                        <schart ref="line" class="schart" canvasId="line" :data="data" type="line" :options="options2"></schart>
+                        <schart ref="line" class="schart" canvasId="line" :data="OutComeList" type="line" :options="options2"></schart>
                     </el-card>
                 </el-col>
             </el-row>
@@ -135,7 +135,8 @@
        /* 打开页面自动获取后台数据*/
         mounted: function() {
             this.getOthersDate();
-            this.getEchartsData();
+            this.getEchartsInComeData();
+           this.getEchartsOutComeData();
         },
         data() {
             return {
@@ -144,18 +145,20 @@
                 shopName: localStorage.getItem('shopName'),
                 userId: localStorage.getItem('userId'),
                 showAddReadyDo: false, //设置代办弹框为false，点击为true显示
-                todoList: [],
+                todoList:[],
+                InComeList: [],
+                OutComeList:[],
                 formLabelAlign: {
                     title: '',
                     date: ''
                 },
-                data: [{
+                echartsData: [/*{
                     name: '2018/09/04',
                     value: 1083
                 }, {
                     name: '2018/09/05',
                     value: 1888
-                }],
+                }*/],
 
 
                 options: {
@@ -187,7 +190,7 @@
         },
         created() {
             this.handleListener();
-            this.changeDate();
+           
         },
         activated() {
             this.handleListener();
@@ -197,13 +200,6 @@
             bus.$off('collapse', this.handleBus);
         },
         methods: {
-            changeDate() {
-                const now = new Date().getTime();
-                this.data.forEach((item, index) => {
-                    const date = new Date(now - (6 - index) * 86400000);
-                    item.name = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`
-                })
-            },
             handleListener() {
                 bus.$on('collapse', this.handleBus);
                 // 调用renderChart方法对图表进行重新渲染
@@ -226,7 +222,7 @@
                         userId: this.userId
                     })
                     .then((response) => {
-                        console.log(response.data)
+                        
                         this.todoList = response.data
 
                     })
@@ -241,20 +237,33 @@
                         formLabelAlign: this.formLabelAlign
                     })
                     .then((response) => {
-                        console.log(response.data)
                         this.reload()
 
                     })
                     .catch(function(error) {}.bind(this));
             },
-            getEchartsData() {//获取图表数据
+            getEchartsInComeData() {//获取图表数据
                 this
                     .$axios
-                    .post('/budget/getEchartsData', {
+                    .post('/budget/getEchartsInComeData', {
                         userId: this.userId
                     })
                     .then((response) => {
-                        console.log(response.data)
+                        
+                        this.InComeList=response.data
+                    })
+                    .catch(function(error) {}.bind(this));
+            },
+
+            getEchartsOutComeData(){
+                this
+                    .$axios
+                    .post('/budget/getEchartsOutComeData', {
+                        userId: this.userId
+                    })
+                    .then((response) => {
+                        
+                        this.OutComeList=response.data
                     })
                     .catch(function(error) {}.bind(this));
             }

@@ -13,7 +13,7 @@
                 <el-button type="primary" icon="search" s>搜索</el-button>
             </div>
             <el-tabs type="border-card">
-                <el-tab-pane label="按天查看"> <el-table :data="tableData" stripe style="width: 100%">
+                <el-tab-pane label="按天查看"> <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%">
                 <el-table-column label="记录日期" width="180">
                     <template slot-scope="scope">
                         <div>{{scope.row.createTime|moment1}}</div>
@@ -29,7 +29,7 @@
 
             <div class="block">
                 <!-- 分页插件 -->
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[10, 20, 30, 40]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="40">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"  layout="total,  prev, pager, next, jumper" :total="total">
                 </el-pagination>
             </div>
         </el-tab-pane>
@@ -72,6 +72,7 @@
 export default {
     mounted: function() {
         this.getBubgetData();
+        this.selectPage();
     },
     inject:['reload'],
     data() {
@@ -87,6 +88,11 @@ export default {
                 outSum: '',
                 createTime: ''
             },
+            currentPage:1,
+            pagesize:8,
+            total:0
+            
+
 
         }
     },
@@ -126,11 +132,28 @@ export default {
                 }.bind(this));
         },
         handleSizeChange(val) {
+            this.pagesize=val;
             console.log(`每页 ${val} 条`);
+            
         },
         handleCurrentChange(val) {
+            this.currentPage=val;
             console.log(`当前页: ${val}`);
-        }
+        },
+        selectPage(){
+                this
+                    .$axios
+                    .post('/budget/selectPage', {
+                        userId: this.userId
+                    })
+                    .then((response) => {
+                        console.log(response.data)
+                        this.total=response.data.total
+                        this.currentPage=response.data.current
+                        
+                    })
+                    .catch(function(error) {}.bind(this));
+            }
     }
 }
 
