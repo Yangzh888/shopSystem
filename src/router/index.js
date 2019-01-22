@@ -65,9 +65,9 @@ export default new Router({
                 },
                 {
                     // 拖拽列表组件
-                    path: '/drag',
-                    component: resolve => require(['../components/page/DragList.vue'], resolve),
-                    meta: { title: '拖拽列表' }
+                    path: '/search',
+                    component: resolve => require(['../components/page/Search.vue'], resolve),
+                    meta: { title: '查找题目' }
                 },
                 {
                     // 权限页面

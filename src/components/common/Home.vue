@@ -13,7 +13,7 @@
             </div>
  
         </div>
-        <v-footer></v-footer>
+
     </div>
     
 </template>
@@ -23,7 +23,6 @@
     import vSidebar from './Sidebar.vue';
     import vTags from './Tags.vue';
     import bus from './bus';
-    import vfooter from './Footer';
     export default {
         data(){
             return {
@@ -32,7 +31,7 @@
             }
         },
         components:{
-            vHead, vSidebar, vTags,vfooter
+            vHead, vSidebar, vTags
         },
         created(){
             bus.$on('collapse', msg => {

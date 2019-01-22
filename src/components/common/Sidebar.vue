@@ -94,8 +94,8 @@
                     },
                     {
                         icon: 'el-icon-rank',
-                        index: 'drag',
-                        title: '权限管理'
+                        index: 'search',
+                        title: '查找'
                     },
                     {
                         icon: 'el-icon-lx-warn',
