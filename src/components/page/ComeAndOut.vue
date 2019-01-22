@@ -25,11 +25,16 @@
                 </el-table-column>
                 <el-table-column prop="memo" label="备注信息">
                  </el-table-column>
+                  <el-table-column label="操作" width="180">
+                    <template slot-scope="scope">
+                        <div>{{scope.row.createTime|moment1}}</div>
+                    </template>
+                </el-table-column>
             </el-table>
 
             <div class="block">
                 <!-- 分页插件 -->
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"  layout="total,  prev, pager, next, jumper" :total="total">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage":page-sizes="[pagesize]"   layout="total, sizes, prev, pager, next, jumper" :total="total"  >
                 </el-pagination>
             </div>
         </el-tab-pane>
@@ -89,7 +94,7 @@ export default {
                 createTime: ''
             },
             currentPage:1,
-            pagesize:8,
+            pagesize:5,
             total:0
             
 
@@ -125,7 +130,7 @@ export default {
                 .then((response) => {
                     console.log(response.data)
                     this.tableData = response.data;
-                    console.log(this.tableData);
+                    
                 })
                 .catch(function(error) {
                     console.log(error.data)
