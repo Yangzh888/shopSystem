@@ -2,7 +2,7 @@
   <div class="sidebar">
 <el-input
   placeholder="请输入内容"
-  v-model="input"
+  v-model="input" @keyup.enter.native="search"
   clearable>
 </el-input>
  <el-button @click="search()">查询</el-button>
