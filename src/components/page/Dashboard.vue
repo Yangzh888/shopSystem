@@ -10,7 +10,7 @@
                             <div>{{role}}</div>
                         </div>
                     </div>
-                    <div class="user-info-list">商铺: <span>{{    shopName}}</span></div>
+                    <div class="user-info-list">商铺:<span>{{shopName}}</span></div>
                 </el-card>
                 <el-card shadow="hover" style="height:300px;">
                     <div slot="header" class="clearfix">
@@ -36,7 +36,7 @@
                                 <i class="el-icon-lx-people grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">1234</div>
-                                    <div>用户访问量</div>
+                                    <div>仓库预估成本</div>
                                 </div>
                             </div>
                         </el-card>
@@ -47,7 +47,7 @@
                                 <i class="el-icon-lx-notice grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">321</div>
-                                    <div>系统消息</div>
+                                    <div>仓库预估利润</div>
                                 </div>
                             </div>
                         </el-card>
@@ -58,7 +58,7 @@
                                 <i class="el-icon-lx-goods grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">5000</div>
-                                    <div>数量</div>
+                                    <div>当前商铺总价值</div>
                                 </div>
                             </div>
                         </el-card>
