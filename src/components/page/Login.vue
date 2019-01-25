@@ -2,7 +2,7 @@
     <div class="login-wrap">
         <div class="ms-login">
             <div class="ms-title">商铺管理系统</div>
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
+            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
                     <el-input v-model="ruleForm.username" placeholder="用户名">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
@@ -101,8 +101,7 @@
                       type: [],
                       forgetQue:'',
                       forgetAns:'',
-                      userPhone:''
-                     
+                      userPhone:''    
                      
         },
                 formLabelWidth: '120px',
@@ -117,32 +116,13 @@
             }
         },
         methods: {
-            submitForm() {
-               /* this.$refs[formName].validate((valid) => {
+            submitForm(formName) {
+               this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        localStorage.setItem('ms_username',this.ruleForm.username);
-                        this.$router.push('/');
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                }*/
-                    this.$axios
-                            .post('/userInfo/login', {
+                         this.$axios.post('/userInfo/login', {
                               userId: this.ruleForm.username,
                               password: this.ruleForm.password
                             })
-                            /*.then(successResponse => {
-                              this.responseResult = JSON.stringify(successResponse.data);
-                              alert(responseResult);
-                              if (successResponse.data.code === 200) {
-                                this.$router.replace({path: '/dashboard'})
-                                /* this.$router.push('/');
-                              }
-                            })
-
-
-                            .catch(failResponse => {}*/
                             .then(function (response) {
                                     console.log(response);
                                     if (response.data.code===200) {
@@ -157,6 +137,11 @@
                                         console.log("登陆错误")
                                         this.centerDialogVisible=true;
                                     }
+                                    else{
+                                      this.messageTip='账号异常';
+                                        console.log("登陆错误")
+                                        this.centerDialogVisible=true;
+                                    }
                                   }.bind(this))
                             .catch(function (error) {
                                  this.messageTip='账号或密码错误，请重新登录！';
@@ -164,6 +149,15 @@
                                         this.centerDialogVisible=true;
                               }.bind(this)
                               );
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                })
+                 
+
+
+
           },
             register() {
                             this

@@ -51,7 +51,7 @@
                     {
                         icon: 'el-icon-lx-copy',
                         index: 'tabs',
-                        title: '客户管理'
+                        title: '待办管理'
                     },
                     {
                         icon: 'el-icon-lx-calendar',

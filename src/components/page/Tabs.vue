@@ -2,10 +2,11 @@
     <div class="">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-copy"></i> tab选项卡</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-copy"></i> 待办信息管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
+               <el-button type="primary">新建待办信息</el-button>
             <el-tabs v-model="message">
                 <el-tab-pane :label="`未读消息(${unread.length})`" name="first">
                     <el-table :data="unread" :show-header="false" style="width: 100%">
@@ -17,12 +18,12 @@
                         <el-table-column prop="date" width="180"></el-table-column>
                         <el-table-column width="120">
                             <template slot-scope="scope">
-                                <el-button size="small" @click="handleRead(scope.$index)">标为已读</el-button>
+                                <el-button size="small" @click="handleRead(scope.$index)">标为已完成</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
                     <div class="handle-row">
-                        <el-button type="primary">全部标为已读</el-button>
+                        <el-button type="primary">全部标为已完成</el-button>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane :label="`已读消息(${read.length})`" name="second">
@@ -34,7 +35,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="date" width="150"></el-table-column>
-                            <el-table-column width="120">
+                            <el-table-column width="120"> 
                                 <template slot-scope="scope">
                                     <el-button type="danger" @click="handleDel(scope.$index)">删除</el-button>
                                 </template>

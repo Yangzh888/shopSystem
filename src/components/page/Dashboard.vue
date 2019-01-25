@@ -182,14 +182,14 @@ export default {
 
             options: {
                 title: '最近七天每天入账金额（元）',
-
+  autoWidth: true,   // 设置宽高自适应
                 fillColor: 'rgb(45, 140, 240)',
                 bottomPadding: 20,
                 topPadding: 20
             },
             options2: {
                 title: '最近七天每天出账金额（元）',
-
+  autoWidth: true,   // 设置宽高自适应
                 fillColor: '#FC6FA1',
                 axisColor: '#008ACD',
                 contentColor: '#EEEEEE',

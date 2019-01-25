@@ -34,7 +34,7 @@
                             <el-dropdown-item>项目仓库</el-dropdown-item>
                         </a>
                         <a href="#" target="_blank">
-                            <el-dropdown-item>我的资料</el-dropdown-item>
+                            <el-dropdown-item>我的资料{{globalName}}</el-dropdown-item>
                         </a>
                       
                         <el-dropdown-item divided  command="loginout">退出登录</el-dropdown-item>
@@ -49,9 +49,10 @@
     export default {
         data() {
             return {
+                userId: localStorage.getItem('userId'), //获取存在localStorage的值
                 collapse: false,
                 fullscreen: false,
-                name: 'linxin',
+                name: 'yanzhenhua',
                 message: 2
             }
         },
@@ -62,6 +63,7 @@
             }
         },
         methods:{
+            
             // 用户名下拉菜单选择事件
             handleCommand(command) {
                 if(command == 'loginout'){
