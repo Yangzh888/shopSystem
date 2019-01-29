@@ -53,24 +53,40 @@
                 <el-form-item label="进货日期">
                     <el-date-picker type="date" placeholder="选择日期" v-model="form.date" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="名称">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="单价">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
-                  <el-form-item label="数量">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                  <el-form-item label="地址">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                  <el-form-item label="来源">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                  <el-form-item label="存放位置">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
+                 <el-row>
+                <el-col :span="12">
+                    <el-form-item label="商品名称">
+                        <el-input v-model="form.tradeName"></el-input>
+                    </el-form-item>
+                </el-col>
+               
+                <el-col :span="12">
+                    <el-form-item label="来源">
+                        <el-input v-model="form.goodFrom"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+                      <el-row>
+                <el-col :span="12">
+                    <el-form-item label="单价">
+                        <el-input v-model="form.price"></el-input>
+                    </el-form-item>
+                </el-col>
+               
+                <el-col :span="12">
+                    <el-form-item label="数量">
+                        <el-input v-model="form.quantity"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+                
+                 <el-row>
+                <el-col :span="12">
+                    <el-form-item label="存放位置">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -86,6 +102,7 @@
                 <el-button type="primary" @click="deleteRow">确 定</el-button>
             </span>
         </el-dialog>
+
     </div>
 </template>
 
@@ -106,9 +123,11 @@
                 editVisible: false,
                 delVisible: false,
                 form: {
-                    name: '',
-                    date: '',
-                    address: ''
+                    tradeName: '',
+                    goodFrom: '',
+                    location: '',
+                    price:0,
+                    quantity: 1
                 },
                 idx:-1,
             currentPage: 1,
@@ -122,7 +141,8 @@
                  this
                     .$axios
                     .post('/goods/getGoodsInfo', {
-                        userId: this.userId
+                        userId: this.userId,
+                        form:this.form
                     })
                     .then((response) => {
                         console.log(response.data)
@@ -130,6 +150,18 @@
                         this.currentPage=response.data.current
                         this.tableData=response.data.records
                         
+                    })
+                    .catch(function(error) {}.bind(this));
+
+            },
+             saveGoods(){
+                 this
+                    .$axios
+                    .post('/goods/saveGoods', {
+                        userId: this.userId
+                    })
+                    .then((response) => {
+                        console.log(response.data)
                     })
                     .catch(function(error) {}.bind(this));
 
