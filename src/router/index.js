@@ -25,8 +25,8 @@ export default new Router({
                     meta: { title: '自定义图标' }
                 },
                 {
-                    path: '/table',
-                    component: resolve => require(['../components/page/BaseTable.vue'], resolve),
+                    path: '/goods',
+                    component: resolve => require(['../components/page/Goods.vue'], resolve),
                     meta: { title: '基础表格' }
                 },
                 {

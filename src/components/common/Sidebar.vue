@@ -45,7 +45,7 @@
                     },
                     {
                         icon: 'el-icon-lx-cascades',
-                        index: 'table',
+                        index: 'goods',
                         title: '商品管理'
                     },
                     {
@@ -53,10 +53,10 @@
                         index: 'tabs',
                         title: '待办管理'
                     },
-                    {
+                   /* {
                         icon: 'el-icon-lx-calendar',
                         index: '3',
-                        title: '表单相关',
+                        title: '客户管理',
                         subs: [
                             {
                                 index: 'form',
@@ -81,16 +81,32 @@
                                 title: '文件上传'
                             }
                         ]
+                    },*/
+                    {
+                        icon: 'el-icon-lx-calendar',
+                        index: '2',
+                        title: '客户管理',
+                        subs: [
+                            {
+                                index: 'form',
+                                title: '批发商相关'
+                            },
+                        
+                            {
+                                index: 'upload',
+                                title: '客户管理'
+                            }
+                        ]
                     },
                     {
                         icon: 'el-icon-lx-emoji',
                         index: 'icon',
-                        title: '收支记录'
+                        title: '收支统计'
                     },
                     {
                         icon: 'el-icon-lx-favor',
                         index: 'charts',
-                        title: '数据展示'
+                        title: '数据分析'
                     },
                     {
                         icon: 'el-icon-rank',
@@ -104,7 +120,7 @@
                         subs: [
                             {
                                 index: 'permission',
-                                title: '权限测试'
+                                title: '信息管理'
                             },
                             {
                                 index: '404',

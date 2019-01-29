@@ -142,7 +142,6 @@ export default {
     inject: ['reload'],
     /* 打开页面自动获取后台数据*/
     mounted: function() {
-        this.getOthersDate();
         this.getEchartsInComeData();
         this.getEchartsOutComeData();
         this.selectPage();

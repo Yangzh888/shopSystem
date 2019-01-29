@@ -34,7 +34,7 @@
                             <el-dropdown-item>项目仓库</el-dropdown-item>
                         </a>
                         <a href="#" target="_blank">
-                            <el-dropdown-item>我的资料{{globalName}}</el-dropdown-item>
+                            <el-dropdown-item  command="x">我的资料</el-dropdown-item>
                         </a>
                       
                         <el-dropdown-item divided  command="loginout">退出登录</el-dropdown-item>
@@ -69,6 +69,9 @@
                 if(command == 'loginout'){
                     localStorage.removeItem('ms_username')
                     this.$router.push('/login');
+                }
+                if(command=='x'){
+                     this.$router.push('/icon');
                 }
             },
             // 侧边栏折叠
