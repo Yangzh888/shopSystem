@@ -33,9 +33,9 @@
                           <a href="https://github.com/Yangzh888/shopSystem" target="_blank">
                             <el-dropdown-item>项目仓库</el-dropdown-item>
                         </a>
-                        <a href="#" target="_blank">
-                            <el-dropdown-item  command="x">我的资料</el-dropdown-item>
-                        </a>
+                        
+                            <el-dropdown-item divided  command="jump">我的资料</el-dropdown-item>
+                        
                       
                         <el-dropdown-item divided  command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
@@ -70,8 +70,8 @@
                     localStorage.removeItem('ms_username')
                     this.$router.push('/login');
                 }
-                if(command=='x'){
-                     this.$router.push('/icon');
+                if(command=='jump'){
+                     this.$router.push('/userInfo');
                 }
             },
             // 侧边栏折叠
@@ -79,6 +79,7 @@
                 this.collapse = !this.collapse;
                 bus.$emit('collapse', this.collapse);
             },
+           
             // 全屏事件
             handleFullScreen(){
                 let element = document.documentElement;

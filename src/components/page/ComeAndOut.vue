@@ -9,8 +9,8 @@
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-edit" class="handle-del mr10" @click="saveBudgetDailog = true">新增记录
                 </el-button>
-                <el-input placeholder="筛选关键词" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="search" s>搜索</el-button>
+                <el-input placeholder="筛选关键词" class="handle-input mr10" v-model="selectWord"></el-input>
+                <el-button type="primary" icon="search" >搜索</el-button>
             </div>
             <el-tabs type="border-card">
                 <el-tab-pane label="按天查看"> <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%">
@@ -82,7 +82,7 @@ export default {
     inject:['reload'],
     data() {
         return {
-
+selectWord:"",
             responseTips: false,
             messageTip: '',
             userId: localStorage.getItem('userId'),
@@ -128,7 +128,7 @@ export default {
                     userId: this.userId
                 })
                 .then((response) => {
-                    console.log(response.data)
+                    
                     this.tableData = response.data;
                     
                 })
@@ -149,10 +149,11 @@ export default {
                 this
                     .$axios
                     .post('/budget/selectPage', {
-                        userId: this.userId
+                        userId: this.userId,
+                        selectWord:this.selectWord
                     })
                     .then((response) => {
-                        console.log(response.data)
+                      
                         this.total=response.data.total
                         this.currentPage=response.data.current
                         

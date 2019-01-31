@@ -35,8 +35,8 @@
                             <div class="grid-content grid-con-1">
                                 <i class="el-icon-lx-people grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
-                                    <div>仓库预估成本</div>
+                                    <div class="grid-num">{{sum}}元</div>
+                                    <div>当前仓库预估成本</div>
                                 </div>
                             </div>
                         </el-card>
@@ -95,7 +95,7 @@
                     </el-table>
                     <div class="block">
                 <!-- 分页插件 -->
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[pagesize]"  layout="total,prev,pager,next,jumper" :total="total">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[pagesize]"   layout="total, sizes, prev, pager, next, jumper" :total="total"  >
                 </el-pagination>
             </div>
                 </el-card>
@@ -145,6 +145,7 @@ export default {
         this.getEchartsInComeData();
         this.getEchartsOutComeData();
         this.selectPage();
+        this.getSumByUserId();
     },
     data() {
         return {
@@ -177,7 +178,7 @@ export default {
             pagesize: 5,
             total: 0,
           
-
+sum:0,
 
             options: {
                 title: '最近七天每天入账金额（元）',
@@ -330,6 +331,19 @@ export default {
                         this.total=response.data.total
                         this.currentPage=response.data.current
                         this.todoList=response.data.records
+                        
+                    })
+                    .catch(function(error) {}.bind(this));
+        },
+        getSumByUserId(){
+             this
+                    .$axios
+                    .post('/goods/getSumByUserId', {
+                        userId: this.userId
+                    })
+                    .then((response) => {
+                      console.log(response.data)
+                      this.sum=response.data.data
                         
                     })
                     .catch(function(error) {}.bind(this));

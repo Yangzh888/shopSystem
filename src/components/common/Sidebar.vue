@@ -118,9 +118,13 @@
                         index: '6',
                         title: '个人信息',
                         subs: [
-                            {
+                          /*  {
                                 index: 'permission',
                                 title: '信息管理'
+                            },*/
+                            {
+                                index: 'userInfo',
+                                title: '个人信息'
                             },
                             {
                                 index: '404',

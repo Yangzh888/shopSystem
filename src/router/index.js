@@ -27,7 +27,7 @@ export default new Router({
                 {
                     path: '/goods',
                     component: resolve => require(['../components/page/Goods.vue'], resolve),
-                    meta: { title: '基础表格' }
+                    meta: { title: '商品管理' }
                 },
                 {
                     path: '/tabs',
@@ -38,6 +38,11 @@ export default new Router({
                     path: '/form',
                     component: resolve => require(['../components/page/BaseForm.vue'], resolve),
                     meta: { title: '基本表单' }
+                },
+                 {
+                    path: '/userInfo',
+                    component: resolve => require(['../components/page/UserInfo.vue'], resolve),
+                    meta: { title: '个人信息' }
                 },
                 {
                     // 富文本编辑器组件
