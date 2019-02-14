@@ -88,7 +88,7 @@
                         </el-table-column>
                         <el-table-column label="操作">
                             <template slot-scope="scope">
-                                <a href="javascript:;" @click="editReadyDo(scope.row.othersId)">  <i class="el-icon-edit"></i></a>
+                               <!--  <a href="javascript:;" @click="editReadyDo(scope.row.othersId)">  <i class="el-icon-edit"></i></a> -->
                                 <a href="javascript:;" @click="deleteReadyDo(scope.row.othersId)"> <i class="el-icon-delete"></i></a>
                             </template>
                         </el-table-column>

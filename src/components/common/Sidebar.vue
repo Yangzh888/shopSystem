@@ -99,7 +99,7 @@
                         title: '客户管理',
                         subs: [
                             {
-                                index: 'form',
+                                index: 'wholesaler',
                                 title: '批发商相关'
                             },
                         

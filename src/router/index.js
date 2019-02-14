@@ -40,9 +40,9 @@ export default new Router({
                     meta: { title: 'tab选项卡' }
                 },
                 {
-                    path: '/form',
-                    component: resolve => require(['../components/page/BaseForm.vue'], resolve),
-                    meta: { title: '基本表单' }
+                    path: '/wholesaler',
+                    component: resolve => require(['../components/page/Wholesaler.vue'], resolve),
+                    meta: { title: '批发商管理' }
                 },
                  {
                     path: '/userInfo',
