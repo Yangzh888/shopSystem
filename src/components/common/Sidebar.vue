@@ -45,8 +45,19 @@
                     },
                     {
                         icon: 'el-icon-lx-cascades',
-                        index: 'goods',
-                        title: '商品管理'
+                        index: '4',
+                        title: '商品管理',
+                        subs: [
+                            {
+                                index: 'goods',
+                                title: '商品出入库记录'
+                            },
+                             {
+                                index: 'editGoods',
+                                title: '配置商品'
+                            },
+                           
+                        ]
                     },
                     {
                         icon: 'el-icon-lx-copy',

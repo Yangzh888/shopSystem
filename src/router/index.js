@@ -29,6 +29,11 @@ export default new Router({
                     component: resolve => require(['../components/page/Goods.vue'], resolve),
                     meta: { title: '商品管理' }
                 },
+                  {
+                    path: '/editGoods',
+                    component: resolve => require(['../components/page/editGoods.vue'], resolve),
+                    meta: { title: '配置商品信息' }
+                },
                 {
                     path: '/tabs',
                     component: resolve => require(['../components/page/Tabs.vue'], resolve),
