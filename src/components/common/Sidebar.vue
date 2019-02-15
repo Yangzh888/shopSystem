@@ -104,7 +104,7 @@
                             },
                         
                             {
-                                index: 'upload',
+                                index: 'customer',
                                 title: '客户管理'
                             }
                         ]

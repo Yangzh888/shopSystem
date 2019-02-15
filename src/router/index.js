@@ -61,11 +61,17 @@ export default new Router({
                     component: resolve => require(['../components/page/Markdown.vue'], resolve),
                     meta: { title: 'markdown编辑器' }    
                 },
-                {
+                /*{
                     // 图片上传组件
                     path: '/upload',
                     component: resolve => require(['../components/page/Upload.vue'], resolve),
                     meta: { title: '文件上传' }   
+                },*/
+                  {
+                    // 客户管理
+                    path: '/customer',
+                    component: resolve => require(['../components/page/Customer.vue'], resolve),
+                    meta: { title: '客户管理' }   
                 },
                 {
                     // vue-schart组件
@@ -74,7 +80,7 @@ export default new Router({
                     meta: { title: 'schart图表' }
                 },
                 {
-                    // 拖拽列表组件
+                    
                     path: '/search',
                     component: resolve => require(['../components/page/Search.vue'], resolve),
                     meta: { title: '查找题目' }

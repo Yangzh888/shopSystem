@@ -21,7 +21,9 @@
                 </el-table-column>
                 <el-table-column prop="type" label="类别">
                 </el-table-column>
-                <el-table-column prop="goodFrom" label="来源">
+                <el-table-column prop="warmingNumber" label="警报库存">
+                </el-table-column>
+                <el-table-column prop="number" label="商品当前数量">
                 </el-table-column>
                 <el-table-column prop="location" label="存放位置">
                 </el-table-column>
@@ -67,15 +69,15 @@
                 <el-row>
              
                    <el-col :span="24">
-                        <el-form-item label="来源" prop="goodFrom">
-                            <el-input v-model="form.goodFrom"  placeholder=" 来源于哪个批发商"></el-input>
+                        <el-form-item label="警报库存" prop="warmingNumber">
+                            <el-input v-model="form.warmingNumber"  placeholder=" 当商品数量低于该值会收到警报信息 "></el-input>
                         </el-form-item>
                     </el-col>
                     </el-row>
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="类别" prop="type">
-                            <el-input v-model="form.type" placeholder=" 米、油、调料等...."></el-input>
+                            <el-input v-model="form.type" placeholder=" 输入该商品类别 ...."></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -129,12 +131,11 @@ export default {
             form: {
                 createTime: '',
                 tradeName: '',
-                goodFrom: '',
+                warmingNumber: '',
                 location: '',
                 type:"",
                 profit:"",
-                userId: "",
-                identifier: "",
+                userId: ""
             },
             idx: -1,
             currentPage: 1,
@@ -143,10 +144,10 @@ export default {
             activeName: 'first',
             rules: {
                 tradeName: [{ required: true, message: '请填商品名称', trigger: 'blur' }],
-                goodFrom: [{ required: true, message: '请填写商品来自哪个批发商', trigger: 'blur' }],
+                warmingNumber: [{ required: true, message: '请填写商品警告库存，低于该值系统会发出警告', trigger: 'blur' }],
                 location: [{ required: true, message: '请填写商品存放位置', trigger: 'blur' }],
                  profit: [{ required: true, message: '请填写商品预期利润', trigger: 'blur' }],
-                 type: [{ required: true, message: '请填写商品所属类别', trigger: 'blur' }],
+            
 
             }
 
@@ -216,13 +217,13 @@ export default {
             this.form = {
                 createTime: item.createTime,
                 tradeName: item.tradeName,
-                goodFrom: item.goodFrom,
+                warmingNumber: item.warmingNumber,
                 location: item.location,
-                price: item.price,
-                quantity: item.quantity,
-                goodsId: item.goodsId,
+                type: item.type,
+                profit: item.profit,
+                goodsInfoId: item.goodsInfoId,
                 userId: item.userId,
-                identifier: item.identifier
+                
             }
             this.editVisible = true;
         },

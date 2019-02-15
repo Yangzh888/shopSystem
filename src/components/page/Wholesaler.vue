@@ -8,8 +8,8 @@
         </div>
          <div class="container">
             <div class="handle-box">
-                <el-input v-model="selectWord" placeholder="通过名称进行搜索" class="handle-input mr10" @keyup.enter.native="getGoodsInfo"></el-input>
-                <el-button type="primary" icon="search" @click="getGoodsInfo()">搜索</el-button>
+                <el-input v-model="selectWord" placeholder="通过批发商名称或者联系人进行搜索" class="handle-input mr10" @keyup.enter.native="getWholesaler()"></el-input>
+                <el-button type="primary" icon="search" @click="getWholesaler()">搜索</el-button>
                 <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true">新增批发商</el-button>
             </div>
             <el-table :data="tableData" border class="table" style="width: 100%" height="500">
@@ -157,7 +157,8 @@ export default {
                 .$axios
                 .post('/wholesaler/getWholesaler', {
                     userId: this.userId,
-                    selectWord: this.selectWord
+                    selectWord: this.selectWord,
+                    status:'wholesaler'
                 })
                 .then((response) => {
                     this.total = response.data.total
@@ -206,15 +207,15 @@ export default {
             this.idx = index;
             const item = this.tableData[index];
             this.form = {
-                createTime: item.createTime,
-                tradeName: item.tradeName,
-                goodFrom: item.goodFrom,
-                location: item.location,
-                price: item.price,
-                quantity: item.quantity,
-                goodsId: item.goodsId,
+                wholesalerName: item.wholesalerName,
+                linkMan: item.linkMan,
+                phone: item.phone,
+                address: item.address,
+                businessScope: item.businessScope,
+                memo: item.memo,
+                wholesalerId: item.wholesalerId,
                 userId: item.userId,
-                identifier: item.identifier
+                status: item.status
             }
             this.editVisible = true;
         },
