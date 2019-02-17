@@ -35,9 +35,9 @@ export default new Router({
                     meta: { title: '配置商品信息' }
                 },
                 {
-                    path: '/tabs',
-                    component: resolve => require(['../components/page/Tabs.vue'], resolve),
-                    meta: { title: 'tab选项卡' }
+                    path: '/readyDo',
+                    component: resolve => require(['../components/page/ReadyDo.vue'], resolve),
+                    meta: { title: '代办信息' }
                 },
                 {
                     path: '/wholesaler',

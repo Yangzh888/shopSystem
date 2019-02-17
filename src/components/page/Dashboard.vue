@@ -70,20 +70,15 @@
                         <el-button style="float: right; padding: 1px 0" type="text" @click="showAddReadyDo = true">添加</el-button>
                     </div>
                     <el-table :data="todoList.slice((currentPage-1)*pagesize,currentPage*pagesize)" :height="304" style="width: 100%;font-size:14px;">
-                        
-                        <el-table-column label="状态">
-                            <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.status"></el-checkbox>
-                            </template>
-                        </el-table-column>
+                    
                         <el-table-column label="标题">
                             <template slot-scope="scope">
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}</div>
+                                <div class="todo-item">{{scope.row.title}}</div>
                             </template>
                         </el-table-column>
                         <el-table-column label="创建时间">
                             <template slot-scope="scope">
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.createTime|moment}}</div>
+                                <div class="todo-item" >{{scope.row.createTime|moment}}</div>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作">
@@ -114,13 +109,13 @@
             </el-col>
         </el-row>
         <el-dialog title="提示" :visible.sync="showAddReadyDo" width="30%" center>
-            <el-form :label-position="left" label-width="80px" :model="formLabelAlign">
+            <el-form :label-position="left" label-width="80px" :model="readyDoform">
                 <el-form-item label="标题">
-                    <el-input v-model="formLabelAlign.title"></el-input>
+                    <el-input v-model="readyDoform.title"></el-input>
                 </el-form-item>
                 <el-form-item label="创建时间">
                     <span class="demonstration"></span>
-                    <el-date-picker v-model="formLabelAlign.date" type="datetime" placeholder="选择日期时间">
+                    <el-date-picker v-model="readyDoform.date" type="datetime" placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
             </el-form>
@@ -170,9 +165,10 @@ export default {
                                     name: '1699/12/32',
                                     value: 0
                                 }],
-            formLabelAlign: {
+            readyDoform: {
                 title: '',
-                date: ''
+                date: '',
+                status:'unRead'
             },
             currentPage: 1,
             pagesize: 5,
@@ -261,7 +257,7 @@ sum:0,
                 .$axios
                 .post('/others/saveReadyDo', {
                     userId: this.userId,
-                    formLabelAlign: this.formLabelAlign
+                    readyDoform: this.readyDoform
                 })
                 .then((response) => {
                     this.reload()
@@ -312,7 +308,7 @@ sum:0,
                         othersId: val
                     })
                     .then((response) => {
-                        console.log(response.data)
+                    
                         this.reload();
                     })
                     .catch(function(error) {}.bind(this));
@@ -324,10 +320,11 @@ sum:0,
             this
                     .$axios
                     .post('/others/selectPage', {
-                        userId: this.userId
+                        userId: this.userId,    
+                        status:'unRead'
                     })
                     .then((response) => {
-                        console.log(response.data)
+                      
                         this.total=response.data.total
                         this.currentPage=response.data.current
                         this.todoList=response.data.records
@@ -342,7 +339,7 @@ sum:0,
                         userId: this.userId
                     })
                     .then((response) => {
-                      console.log(response.data)
+                     
                       this.sum=response.data.data
                         
                     })

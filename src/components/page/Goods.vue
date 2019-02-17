@@ -74,8 +74,8 @@
                         </el-select>
                          </el-form-item>
                     </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="来源" prop="goodFrom">
+                    <el-col v-if="form.status=='come'" :span="12" >
+                        <el-form-item label="来源" prop="goodFrom" >
                              <el-select   v-model="form.goodFrom" filterable placeholder="选择批发商" width="100%">
                             <el-option v-for="item in getWholesalerNameList" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
@@ -96,7 +96,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
+                <el-row v-if="form.status=='come'">
                     <el-col :span="12">
                         <el-form-item label="存放位置" prop="location">
                             <el-input v-model="form.location"></el-input>

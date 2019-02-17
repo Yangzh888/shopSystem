@@ -61,7 +61,7 @@
                     },
                     {
                         icon: 'el-icon-lx-copy',
-                        index: 'tabs',
+                        index: 'readyDo',
                         title: '待办管理'
                     },
                    /* {
