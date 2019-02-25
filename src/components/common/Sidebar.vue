@@ -45,7 +45,7 @@
                     },
                     {
                         icon: 'el-icon-lx-cascades',
-                        index: '4',
+                        index: '1',
                         title: '商品管理',
                         subs: [
                             {
@@ -111,13 +111,28 @@
                     },
                     {
                         icon: 'el-icon-lx-emoji',
-                        index: 'icon',
+                        index: 'comeAndOut',
                         title: '收支统计'
                     },
                     {
                         icon: 'el-icon-lx-favor',
-                        index: 'charts',
-                        title: '数据分析'
+                        index: '3',
+                        title: '数据分析',
+                        subs:[
+                         {
+                                index: 'dataAnalysis',
+                                title: '商铺概括分析'
+                            },
+                        
+                            {
+                                index: 'orderAnalysis',
+                                title: '订单分析'
+                            },
+                             {
+                                index: 'wholesalerAnalysis',
+                                title: '客户分析'
+                            }
+                        ]
                     },
                     {
                         icon: 'el-icon-rank',

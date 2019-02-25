@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
+import VCharts from 'v-charts'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../static/css/icon.css';
 import "babel-polyfill";import moment from 'moment/moment'
@@ -23,6 +24,7 @@ Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);
+Vue.use(VCharts);
 //Vue.prototype.$axios = axios;
 
 //使用钩子函数对路由进行权限跳转

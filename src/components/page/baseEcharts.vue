@@ -26,6 +26,7 @@
             <div class="content-title">环形图</div>
             <schart class="schart" canvasId="ring" :data="data2" type="ring" :options="options4"></schart>
             </div>
+          
         </div>
     </div>
 </template>

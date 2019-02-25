@@ -14,7 +14,7 @@
             </div>
             <el-tabs type="border-card">
                 <el-tab-pane label="按天查看">
-                    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%">
+                    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%" height="500">
                         <el-table-column label="记录日期" width="180">
                             <template slot-scope="scope">
                                 <div>{{scope.row.createTime|moment1}}</div>

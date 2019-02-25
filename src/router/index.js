@@ -20,9 +20,9 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
-                    path: '/icon',
+                    path: '/comeAndOut',
                     component: resolve => require(['../components/page/ComeAndOut.vue'], resolve),
-                    meta: { title: '自定义图标' }
+                    meta: { title: '收支统计' }
                 },
                 {
                     path: '/goods',
@@ -75,9 +75,21 @@ export default new Router({
                 },
                 {
                     // vue-schart组件
-                    path: '/charts',
-                    component: resolve => require(['../components/page/BaseCharts.vue'], resolve),
-                    meta: { title: 'schart图表' }
+                    path: '/dataAnalysis',
+                    component: resolve => require(['../components/page/DataAnalysis.vue'], resolve),
+                    meta: { title: '商铺总括分析' }
+                },
+                 {
+                    // vue-schart组件
+                    path: '/orderAnalysis',
+                    component: resolve => require(['../components/page/OrderAnalysis.vue'], resolve),
+                    meta: { title: '订单分析' }
+                },
+                 {
+                    // vue-schart组件
+                    path: '/wholesalerAnalysis',
+                    component: resolve => require(['../components/page/wholesalerAnalysis.vue'], resolve),
+                    meta: { title: '客户分析' }
                 },
                 {
                     
