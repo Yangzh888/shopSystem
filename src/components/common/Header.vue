@@ -15,9 +15,13 @@
                 </div>
                 <!-- 消息中心 -->
                 <div class="btn-bell">
-                    <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <router-link to="/tabs">
-                            <i class="el-icon-bell"></i>
+                    <el-tooltip effect="dark"  placement="bottom">
+                        <router-link to="/readyDo">
+                         
+                            <el-badge :value="readyDoNumber" class="item">
+    <i class="el-icon-bell"></i>
+
+</el-badge>
                         </router-link>
                     </el-tooltip>
                     <span class="btn-bell-badge" v-if="message"></span>
@@ -52,18 +56,37 @@
                 userId: localStorage.getItem('userId'), //获取存在localStorage的值
                 collapse: false,
                 fullscreen: false,
-                name: 'yanzhenhua',
-                message: 2
+                name: 'Yanzhenhua',
+                readyDoNumber:0,
+                message:5
+              
             }
         },
         computed:{
+
             username(){
                 let username = localStorage.getItem('ms_username');
                 return username ? username : this.name;
             }
         },
         methods:{
-            
+         /*获取代办信息*/
+        getUnReadInfo() {
+            this 
+                .$axios
+                .post('/others/selectPage', {
+                    userId: this.userId,
+                    status:'unRead'
+                })
+                .then((response) => {
+                    console.log(response.data.total
+)
+                this.readyDoNumber=response.data.total
+
+                })
+                .catch(function(error) {}.bind(this));
+
+        },
             // 用户名下拉菜单选择事件
             handleCommand(command) {
                 if(command == 'loginout'){
@@ -109,6 +132,7 @@
             }
         },
         mounted(){
+            this.getUnReadInfo();
             if(document.body.clientWidth < 1500){
                 this.collapseChage();
             }
@@ -146,7 +170,7 @@
     }
     .btn-fullscreen{
         transform: rotate(45deg);
-        margin-right: 5px;
+        margin-right: 10px;
         font-size: 24px;
     }
     .btn-bell, .btn-fullscreen{
@@ -159,11 +183,11 @@
     }
     .btn-bell-badge{
         position: absolute;
-        right: 0;
-        top: -2px;
+        right: 20;
+        top: 50px;
         width: 8px;
-        height: 8px;
-        border-radius: 4px;
+        height: 15px;
+        border-radius: 10px;
         background: #f56c6c;
         color: #fff;
     }

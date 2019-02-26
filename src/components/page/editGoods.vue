@@ -23,7 +23,7 @@
                 </el-table-column>
                 <el-table-column prop="warmingNumber" label="警报库存">
                 </el-table-column>
-                <el-table-column prop="number" label="商品当前数量">
+                <el-table-column prop="number" label="商品当前库存">
                 </el-table-column>
                 <el-table-column prop="location" label="存放位置">
                 </el-table-column>

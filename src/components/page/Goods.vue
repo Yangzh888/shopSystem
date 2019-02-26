@@ -57,7 +57,7 @@
                     </el-col>
                 </el-row>
                  <el-row>
-                      <el-form-item label="" prop="createTime">
+                      <el-form-item label="" prop="status">
                 <el-radio v-model="form.status" label="out">出库</el-radio>
   <el-radio v-model="form.status" label="come">入库</el-radio>
 </el-form-item>
@@ -67,7 +67,7 @@
                         <!-- <el-form-item label="商品名称" prop="tradeName">
                             <el-input v-model="form.tradeName"></el-input>
                         </el-form-item> -->
-                          <el-form-item label="名称" prop="goodFrom">
+                          <el-form-item label="名称" prop="tradeName">
                         <el-select  v-model="form.tradeName" filterable placeholder="商品名称" width="100%">
                             <el-option v-for="item in goodsNameList" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
@@ -86,7 +86,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="12">
-                        <el-form-item label="单价" prop="price">
+                        <el-form-item label="单价" prop="price"  >
                             <el-input v-model="form.price"></el-input>
                         </el-form-item>
                     </el-col>
@@ -146,7 +146,7 @@ export default {
             goodsNameList: [],         //可选择商品
             getWholesalerNameList:[],  //可选择来源
             form: {
-                status:"",//出入库判断
+                status:"come",//出入库判断
                 createTime: '',
                 tradeName: '',
                 goodFrom: '',
@@ -156,16 +156,20 @@ export default {
                 goodsId: "",
                 userId: "",
                 identifier: "",
+                goodsInfoId:""
             },
             idx: -1,
             currentPage: 1,
             pagesize: 5,
             total: 0,
             rules: {
-
-                tradeName: [{ required: true, message: '请填商品名称', trigger: 'blur' }],
+                createTime: [{  required: true, message: '请选择日期', trigger: 'blur' }],
+                tradeName: [{ required: true, message: '请选择商品，若无你希望的商品，请去商品配置菜单出配置', trigger: 'blur' }],
                 location: [{ required: true, message: '请填写商品存放位置', trigger: 'blur' }],
-                price: [{ required: true, message: '请填写商品单价', trigger: 'blur' }],
+                 status: [{ required: true, message: '类型不能为空', trigger: 'blur' }],
+                price: [{ required: true, message: '请填写商品单价', trigger: 'blur'},
+                 
+                ],
                 quantity: [{ required: true, message: '请填写商品数量', trigger: 'blur' }],
 
             }
@@ -192,7 +196,7 @@ export default {
                 .catch(function(error) {}.bind(this));
 
         },
-        /*保存商品*/
+        /*保存商品出入库记录*/
         saveGoods(form) {
             this.$refs[form].validate((valid) => {
                 if (valid) {
@@ -204,13 +208,20 @@ export default {
                             form: this.form
                         })
                         .then((response) => {
-                            this.$message.success(`执行成功`);
+                            console.log(response.data);
+                            if(response.data.code===200){
+                                this.$message.success(response.data.message);
+                                this.editVisible = false;
+                            }else{
+                                 this.$message.error(response.data.message);
+                            }
+                            
                             this.reload();
-                            this.editVisible = false;
+                            
                         })
                         .catch(function(error) {}.bind(this));
                 } else {
-                    console.log('error submit!!');
+                    
                     return false;
                 }
             });
@@ -233,6 +244,7 @@ export default {
             this.idx = index;
             const item = this.tableData[index];
             this.form = {
+                status:item.status,
                 createTime: item.createTime,
                 tradeName: item.tradeName,
                 goodFrom: item.goodFrom,
@@ -241,7 +253,8 @@ export default {
                 quantity: item.quantity,
                 goodsId: item.goodsId,
                 userId: item.userId,
-                identifier: item.identifier
+                identifier: item.identifier,
+                goodsInfoId:item.goodsInfoId
             }
             this.editVisible = true;
         },
@@ -266,7 +279,7 @@ export default {
                     goodsId: this.goodsId
                 })
                 .then((response) => {
-                    console.log(response.data);
+                    
                     this.reload();
                 })
                 .catch(function(error) {}.bind(this));
@@ -282,7 +295,7 @@ export default {
                     userId: this.userId,
                 })
                 .then((response) => {
-                    console.log(response.data)
+                 
                     this.goodsNameList = response.data
                 })
                 .catch(function(error) {}.bind(this));
@@ -296,7 +309,7 @@ export default {
                     status:'wholesaler'
                 })
                 .then((response) => {
-                    console.log(response.data)
+                    
                     this.getWholesalerNameList = response.data
                 })
                 .catch(function(error) {}.bind(this));

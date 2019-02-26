@@ -23,6 +23,11 @@
                                 <div class="message-title">{{scope.row.title}}</div>
                             </template>
                         </el-table-column>
+                         <el-table-column label="标题">
+                            <template slot-scope="scope">
+                                <div class="message-title">{{scope.row.memo}}</div>
+                            </template>
+                        </el-table-column>
                         <el-table-column  width="180">
                             <template slot-scope="scope">
                                 <div class="todo-item">{{scope.row.createTime|moment}}</div>
