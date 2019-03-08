@@ -12,7 +12,7 @@
                 <el-button type="primary" icon="search" @click="getGoodsInfo()">搜索</el-button>
                 <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true">新增客户</el-button>
             </div>
-            <el-table :data="tableData" border class="table" style="width: 100%" height="500">
+            <el-table :data="tableData" border class="table" style="width: 100%" height="500" size=mini>
                   
                 <el-table-column prop="linkMan" label="客户名称">
                 </el-table-column>
@@ -23,9 +23,10 @@
                 
                   <el-table-column prop="memo" label="备注信息">
                 </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                         <el-button type="text" icon="el-icon-info" class="info" @click="handleSelect(scope.row.wholesalerId)">相关订单</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.goodsId)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -52,7 +53,7 @@
                     <el-row>
                     <el-col :span="24">
                         <el-form-item label="联系电话" prop="phone">
-                            <el-input v-model="form.phone"></el-input>
+                            <el-input v-model.number="form.phone"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -85,6 +86,45 @@
                 <el-button type="primary" @click="deleteGoods()">确 定</el-button>
             </span>
         </el-dialog>
+
+        <el-dialog border title='订单关联查询' :visible.sync="OrderTableVisible" width="70%">
+            <el-input v-model="selectWordByDailog" placeholder="通过商品名称进行搜索" class="handle-input mr10" @keyup.enter.native="getAboutCustomerList()" size="medium"></el-input>
+            <el-button type="primary" icon="search" @click="getAboutCustomerList()" size="medium">搜索</el-button>
+            <el-table :data="aboutCustmerList" height="580" size=mini>
+                <el-table-column label="客户名称">
+                    <template slot-scope="scope">
+                        <div>{{scope.row.wholesalerName}}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="tradeName" label="商品名称">
+                </el-table-column>
+                <el-table-column prop="identifier" label="出入库记录编号">
+                </el-table-column>
+                <el-table-column prop="status" label="出库/入库">
+                </el-table-column>
+                <el-table-column label="单价">
+                    <template slot-scope="scope">
+                        <div style="color:red">{{scope.row.price}}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="quantity" label="数量">
+                </el-table-column>
+                <el-table-column prop="sum" label="总价值">
+                </el-table-column>
+                <el-table-column label=出库时间>
+                    <template slot-scope="scope">
+                        <div>{{scope.row.createTime|moment1}}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="location" label="存放位置">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <!-- 分页插件 -->
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChangeDialog" :current-page="handleCurrentChangeDialog" :page-sizes="[dialogPagesize]" layout="total,prev,pager,next,jumper" :total="dialogTotal">
+                </el-pagination>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -99,13 +139,17 @@ export default {
         return {
             userId: localStorage.getItem('userId'),
             tableData: [],
-        
+        customerId:'',
+        current:1,
             selectWord: '',
+            selectWordByDailog:'',
             editVisible: false,
             delVisible: false,
+            OrderTableVisible:false,
             goodsId: "",
             comeAndOut:"",//出入库判断
             goodsNameList: [],
+            aboutCustmerList:[],
             form: {
                 wholesalerName: '',
                 linkMan: '',
@@ -118,12 +162,17 @@ export default {
                 status:'customer'
             },
             idx: -1,
-            currentPage: 1,
+            currentPage:1,
             pagesize: 5,
             total: 0,
+            dialogCurrentPage: 1,
+            dialogPagesize: 10,
+            dialogTotal:0,
             rules: {
                 linkMan: [{ required: true, message: '请填写联系人', trigger: 'blur' }],
-                phone: [{ required: true, message: '请填写联系电话', trigger: 'blur' }],
+                phone: [{ required: true, message: '请填写联系电话', trigger: 'blur' },
+         
+                  { type: 'number', message: '电话必须为数字值'}],
                 address: [{ required: true, message: '请填写批发商地址', trigger: 'blur' }],
            
             }
@@ -178,10 +227,30 @@ export default {
             console.log(`每页 ${val} 条`);
 
         },
+         /*分页处理Dialog*/
+        handleSizeChangeDialog(val) {
+            this.pagesize = val;
+            console.log(`每页 ${val} 条`);
+
+        },
         /*分页处理*/
         handleCurrentChange(val) {
             this.currentPage = val;
+
             console.log(`当前页: ${val}`);
+        },
+          /*分页处理Dialog*/
+        handleCurrentChangeDialog(val) {
+            this.current = val;
+            console.log(`当前页: ${val}`);
+            this.getAboutCustomerList();
+        },
+           //查看订单处理
+        handleSelect(customerId) {
+            this.customerId = customerId;
+            this.OrderTableVisible = true;
+            console.log(this.customerId);
+            this.getAboutCustomerList();
         },
         /*编辑商品处理*/
         handleEdit(index, row) {
@@ -240,7 +309,25 @@ export default {
                     this.goodsNameList = response.data
                 })
                 .catch(function(error) {}.bind(this));
-        }
+        },
+         getAboutCustomerList() {      //获取相关订单弹出层信息弹
+            this
+                .$axios
+                .post('/wholesaler/getAboutWholesalerList', {
+                    userId: this.userId,
+                    customerId: this.customerId,
+                    status: 'out',
+                    current:this.current,
+                    selectWordByDailog: this.selectWordByDailog
+                })
+                .then((response) => {
+                    console.log(response.data)
+                    this.aboutCustmerList = response.data.records
+                    this.dialogTotal = response.data.total
+                    this.dialogCurrentPage = response.data.current
+                })
+                .catch(function(error) {}.bind(this));
+        },
 
     }
 }

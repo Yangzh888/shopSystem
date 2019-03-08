@@ -40,7 +40,7 @@
                 items: [
                     {
                         icon: 'el-icon-lx-home',
-                        index: 'dashboard',
+                        index: 'index',
                         title: '系统首页'
                     },
                     {
@@ -111,12 +111,23 @@
                     },
                     {
                         icon: 'el-icon-lx-emoji',
-                        index: 'comeAndOut',
-                        title: '收支统计'
+                        index: '3',
+                        title: '收支统计',
+                        subs:[ 
+                          {
+                                index: 'comeAndOut',
+                                title: '按日记录'
+                            },
+                        
+                            {
+                                index: 'comeAndOutAnalysis',
+                                title: '记录分析'
+                            }
+                        ]
                     },
                     {
                         icon: 'el-icon-lx-favor',
-                        index: '3',
+                        index: '4',
                         title: '数据分析',
                         subs:[
                          {

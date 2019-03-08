@@ -14,8 +14,8 @@
                     </el-tooltip>
                 </div>
                 <!-- 消息中心 -->
-                <div class="btn-bell">
-                    <el-tooltip effect="dark"  placement="bottom">
+                <div class="btn-bell" >
+                    <el-tooltip effect="dark":content="readyDoNumber?`有${readyDoNumber}条未读消息`:`消息中心`" placement="bottom">
                         <router-link to="/readyDo">
                          
                             <el-badge :value="readyDoNumber" class="item">
@@ -24,7 +24,7 @@
 </el-badge>
                         </router-link>
                     </el-tooltip>
-                    <span class="btn-bell-badge" v-if="message"></span>
+                    <span class="btn-bell-badge" v-if="readyDoNumber"></span>
                 </div>
                 <!-- 用户头像 -->
                 <div class="user-avator"><img src="static/img/img.jpg"></div>
@@ -58,7 +58,7 @@
                 fullscreen: false,
                 name: 'Yanzhenhua',
                 readyDoNumber:0,
-                message:5
+          
               
             }
         },

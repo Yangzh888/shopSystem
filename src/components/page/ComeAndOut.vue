@@ -14,15 +14,15 @@
             </div>
             <el-tabs type="border-card">
                 <el-tab-pane label="按天查看">
-                    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%" height="500">
+                    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%" height="500" size="mini">
                         <el-table-column label="记录日期" width="180">
                             <template slot-scope="scope">
                                 <div>{{scope.row.createTime|moment1}}</div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="inSum" label="当天营业额(元)" width="180">
+                        <el-table-column prop="inSum" label="本次收入(元)" width="180">
                         </el-table-column>
-                        <el-table-column prop="outSum" label="当天支出(元)">
+                        <el-table-column prop="outSum" label="本次支出(元)">
                         </el-table-column>
                         <el-table-column prop="memo" label="备注信息">
                         </el-table-column>
@@ -44,36 +44,41 @@
                         </el-pagination>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="按月查看">按月查看</el-tab-pane>
+                <el-tab-pane label="按月查看" tab-click="getOneMonthComeAndOut()">
+                    <div class="block">
+                        <el-row>
+                            <el-date-picker v-model="selectMonth" type="month" placeholder="选择月" value-format="yyyy-MM">
+                            </el-date-picker>
+                            <el-button type="primary" icon="search" @click="getOneMonthComeAndOut()">搜索</el-button>
+                        </el-row>
+                        <el-row>
+                            <ve-line :data="chartData"></ve-line>
+                        </el-row>
+                    </div>
+                </el-tab-pane>
                 <el-tab-pane label="按年查看">按年查看</el-tab-pane>
             </el-tabs>
         </div>
         <!-- 编辑弹出框 -->
         <el-dialog title="新增/编辑记录" :visible.sync="saveBudgetDailog" width="30%">
-            <el-form ref="form" :model="form" label-width="100px">
-                <el-form-item label="日期">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="form.createTime" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            <el-form ref="form" :model="form" label-width="100px" :rules="rules" status-icon>
+                <el-form-item label="日期" prop="createTime">
+                    <el-date-picker type="date" placeholder="选择日期" v-model="form.createTime"  style="width: 100%;"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="当日收入">
-                    <el-input v-model="form.inSum"></el-input>
+                <el-form-item label="本次收入" prop="inSum">
+                    <el-input v-model.number="form.inSum"></el-input>
                 </el-form-item>
-                <el-form-item label="当日支出">
-                    <el-input v-model="form.outSum"></el-input>
+                <el-form-item label="本次支出" prop="outSum">
+                    <el-input v-model.number="form.outSum"></el-input>
                 </el-form-item>
-                <el-form-item label="备注">
+                <el-form-item label="备注" prop="memo">
                     <el-input v-model="form.memo"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                                 <el-button @click="saveBudgetDailog = false">取 消</el-button>
-                                <el-button type="primary" @click="saveBudget">确 定</el-button>
+                                <el-button type="primary" @click="saveBudget('form')">确 定</el-button>
                             </span>
-        </el-dialog>
-        <el-dialog title="提示" :visible.sync="responseTips" width="30%" center>
-            <span style="font-weight:center">{{messageTip}}</span>
-            <span slot="footer" class="dialog-footer">
-                                            <el-button type="primary" @click="responseTips = false">确 定</el-button>
-                                          </span>
         </el-dialog>
     </div>
 </template>
@@ -82,12 +87,13 @@ export default {
     mounted: function() {
         this.getBubgetData();
         this.selectPage();
+        this.getOneMonthComeAndOut();
     },
     inject: ['reload'],
     data() {
         return {
             selectWord: "",
-            responseTips: false,
+            selectMonth: '',
             messageTip: '',
             userId: localStorage.getItem('userId'),
             tableData: [],
@@ -96,13 +102,26 @@ export default {
                 inSum: '',
                 outSum: '',
                 createTime: '',
-                memo:''
+                memo: ''
+            },
+            chartData: {
+                columns: ['日期', '当天收入', '当天支出'],
+                rows: []
             },
             currentPage: 1,
-            pagesize: 5,
-            total: 0
+            pagesize: 8,
+            total: 0,
 
+            rules: {
+                createTime: [{ type: 'date', required: true, message: '请选择日期', trigger: 'blur' }],
+                inSum: [{ required: true, message: '请输入该次记录的收入金额', trigger: 'blur' },
+                    { type: 'number', message: '收入金额必须为数字值' }
+                ],
+                outSum: [{ required: true, message: '请输入该次记录的支出金额', trigger: 'blur' },
+                    { type: 'number', message: '支出金额也必须为数字值' }
+                ],
 
+            }
 
         }
     },
@@ -110,26 +129,39 @@ export default {
 
     methods: {
         // 保存新增收支支出数据
-        saveBudget() {
-            this
-                .$axios
-                .post('/budget/saveBudget', {
-                    userId: this.userId,
-                    form: this.form
-                })
-                .then((response) => {
-                   
-                    this.responseTips = true;
-                    this.saveBudgetDailog = false;
-if(response.data.code=='200'){
-    this.$message.success(response.data.data)
-}else{
-    this.$message.error(response.data.data)
-}
-                    this.reload()
-                })
-                .catch(function(error) {}.bind(this));
+        saveBudget(form) {
+            this.$refs[form].validate((valid) => {
+                if (valid) {
+                    this
+                        .$axios
+                        .post('/budget/saveBudget', {
+                            userId: this.userId,
+                            form: this.form
+                        })
+                        .then((response) => {
+
+
+                            this.saveBudgetDailog = false;
+                            if (response.data.code == '200') {
+                                this.$message.success(response.data.data)
+                            } else {
+                                this.$message.error(response.data.data)
+                            }
+                            this.reload()
+                        })
+                        .catch(function(error) {}.bind(this));
+                } else {
+
+                    return false;
+                }
+            });
+
         },
+
+
+
+
+
         getBubgetData() {
 
             this
@@ -153,53 +185,77 @@ if(response.data.code=='200'){
         },
         handleCurrentChange(val) {
             this.currentPage = val;
+            this.selectPage(val)
             console.log(`当前页: ${val}`);
         },
-        selectPage() {
+        selectPage(current) {
             this
                 .$axios
                 .post('/budget/selectPage', {
                     userId: this.userId,
-                    selectWord: this.selectWord
+                    selectWord: this.selectWord,
+                    current: current
                 })
                 .then((response) => {
-
                     this.total = response.data.total
                     this.currentPage = response.data.current
 
                 })
                 .catch(function(error) {}.bind(this));
         },
-        handleEdit(index,row) {
+        handleEdit(index, row) {
             console.log(index, row)
             this.idx = index;
             const item = this.tableData[index];
             this.form = {
                 inSum: item.inSum,
-                outSum: item.outSum ,
+                outSum: item.outSum,
                 createTime: item.createTime,
-                memo:item.memo,
+                memo: item.memo,
                 userId: item.userId,
                 budgetId: item.budgetId
             }
             this.saveBudgetDailog = true;
         },
+
         handleDelete(budgetId) {
+            this.$confirm('此操作将永久删除该条待办, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this
+                    .$axios
+                    .post('/budget/deleteBudgetById', {
+                        budgetId: budgetId,
+                    })
+                    .then((response) => {
+
+                        if (response.data.code == 200) {
+                            this.$message.success(response.data.data)
+                        } else {
+                            this.$message.error(response.data.data)
+                        }
+                        this.reload()
+
+                    })
+                    .catch(function(error) {}.bind(this));
+            }).catch(() => {
+
+            });
+        },
+        getOneMonthComeAndOut() {
             this
                 .$axios
-                .post('/budget/deleteBudgetById', {
-                    budgetId: this.budgetId,
+                .post('/budget/getOneMonthComeAndOut', {
+                    userId: this.userId,
+                    selectMonth: this.selectMonth,
                 })
                 .then((response) => {
-                    if (response.data.code === '200') {
-                        this.$message.success(response.data.data)
-                    } else {
-                        this.$message.error(response.data.data)
-                    }
-
+                    this.chartData.rows = response.data
                 })
-                .catch(function(error) { this.$message.error(response.data.data) }.bind(this));
-        }
+                .catch(function(error) {}.bind(this));
+        },
     }
 }
 

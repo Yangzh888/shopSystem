@@ -78,21 +78,16 @@
                     </el-form-item>
                 </el-form>
             </el-dialog>
-            <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
-                <span style="font-weight:center">{{messageTip}}</span>
-                <span slot="footer" class="dialog-footer">
-                            <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
-                          </span>
-            </el-dialog>
         </div>
     </div>
 </template>
 <script>
+    import md5 from 'js-md5';
 export default {
+
     data: function() {
         return {
             dialogFormVisible: false,
-            messageTip: '',
             centerDialogVisible: false,
             ruleForm: {
                 username: '',
@@ -149,7 +144,7 @@ export default {
                 if (valid) {
                     this.$axios.post('/userInfo/login', {
                             userId: this.ruleForm.username,
-                            password: this.ruleForm.password
+                            password: md5(this.ruleForm.password)
                         })
                         .then(function(response) {
                             console.log(response);
@@ -157,22 +152,16 @@ export default {
                                 localStorage.setItem('ms_username', response.data.data.username);
                                 localStorage.setItem('shopName', response.data.data.shopName);
                                 localStorage.setItem('userId', response.data.data.userId);
-
                                 this.$router.push('/');
                             } else if (response.data.code === 400) {
-                                this.messageTip = '账号或密码错误，请重新登录！';
-                                console.log("登陆错误")
-                                this.centerDialogVisible = true;
+                                  this.$message.error('账号或密码错误，请重新登录！')
                             } else {
-                                this.messageTip = '账号异常';
-                                console.log("登陆错误")
-                                this.centerDialogVisible = true;
+                                 this.$message.error('账号异常')
                             }
                         }.bind(this))
                         .catch(function(error) {
-                            this.messageTip = '账号或密码错误，请重新登录！';
-                            console.log("登陆错误")
-                            this.centerDialogVisible = true;
+                             this.$message.error('账号或密码错误，请重新登录！')
+
                         }.bind(this));
                 } else {
                     console.log('error submit!!');
@@ -193,7 +182,8 @@ export default {
                     shopName: this.form.shopName,
                     username: this.form.username,
                     userId: this.form.userId,
-                    password: this.form.password,
+
+                    password: md5(this.form.password),
                     forgetQue: this.form.forgetQue,
                     forgetAns: this.form.forgetAns,
                     userPhone: this.form.userPhone,
@@ -202,14 +192,13 @@ export default {
                 .then(function(response) {
                     console.log(response);
                     if (response.data.code === 200) {
-                        this.messageTip = response.data.message;
                         this.$router.push('login');
-                        this.centerDialogVisible = true;
+                         this.$message.success(response.data.message)
                         this.dialogFormVisible = false;
                     } else if (response.data.code === 400) {
 
                         this.messageTip = response.data.message;
-                        this.centerDialogVisible = true;
+                       this.$message.error(response.data.message)
                     }
                 }.bind(this))
                 .catch(function(error) {
@@ -225,7 +214,7 @@ export default {
     position: relative;
     width: 100%;
     height: 100%;
-    background-image: url(../../assets/login-bg.jpg);
+    background-image: url(../../assets/login.jpg);
     background-size: 100%;
 }
 

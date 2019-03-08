@@ -6,14 +6,14 @@
                 <el-breadcrumb-item>批发商管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-         <div class="container">
+        <div class="container">
             <div class="handle-box">
                 <el-input v-model="selectWord" placeholder="通过批发商名称或者联系人进行搜索" class="handle-input mr10" @keyup.enter.native="getWholesaler()"></el-input>
                 <el-button type="primary" icon="search" @click="getWholesaler()">搜索</el-button>
                 <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true">新增批发商</el-button>
             </div>
-            <el-table :data="tableData" border class="table" style="width: 100%" height="500">
-                    <el-table-column prop="wholesalerName" label="批发商名称">
+            <el-table :data="tableData" border class="table" style="width: 100%" height="500" size=mini>
+                <el-table-column prop="wholesalerName" label="批发商名称">
                 </el-table-column>
                 <el-table-column prop="linkMan" label="联系人">
                 </el-table-column>
@@ -23,11 +23,12 @@
                 </el-table-column>
                 <el-table-column prop="businessScope" label="经营范围">
                 </el-table-column>
-                  <el-table-column prop="memo" label="备注信息">
+                <el-table-column prop="memo" label="备注信息">
                 </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-info" class="info" @click="handleSelect(scope.row.wholesalerId)">相关订单</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.goodsId)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -46,43 +47,43 @@
                         <!-- <el-form-item label="商品名称" prop="tradeName">
                             <el-input v-model="form.tradeName"></el-input>
                         </el-form-item> -->
-                          <el-form-item label="批发商名称" prop="wholesalerName">
-                        <el-input v-model="form.wholesalerName"></el-input>
-                         </el-form-item>
+                        <el-form-item label="批发商名称" prop="wholesalerName">
+                            <el-input v-model="form.wholesalerName"></el-input>
+                        </el-form-item>
                     </el-col>
                 </el-row>
-                 <el-row>
+                <el-row>
                     <el-col :span="24">
                         <!-- <el-form-item label="商品名称" prop="tradeName">
                             <el-input v-model="form.tradeName"></el-input>
                         </el-form-item> -->
-                          <el-form-item label="联系人" prop="linkMan">
-                        <el-input v-model="form.linkMan"></el-input>
-                         </el-form-item>
-                    </el-col>
-                </el-row>
-                    <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="联系电话" prop="phone">
-                            <el-input v-model="form.phone"></el-input>
+                        <el-form-item label="联系人" prop="linkMan">
+                            <el-input v-model="form.linkMan"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                  <el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="联系电话" prop="phone">
+                            <el-input v-model.number="form.phone"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
                     <el-col :span="24">
                         <el-form-item label="联系地址" prop="address">
                             <el-input v-model="form.address"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                    <el-row>
+                <el-row>
                     <el-col :span="24">
                         <el-form-item label="经营范围" prop="businessScope">
                             <el-input v-model="form.businessScope"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                     <el-row>
+                <el-row>
                     <el-col :span="24">
                         <el-form-item label="备注信息" prop="memo">
                             <el-input v-model="form.memo"></el-input>
@@ -104,6 +105,45 @@
                 <el-button type="primary" @click="deleteGoods()">确 定</el-button>
             </span>
         </el-dialog>
+        <!-- 订单提示框 -->
+        <el-dialog border title='订单关联查询' :visible.sync="OrderTableVisible" width="70%">
+            <el-input v-model="selectWordByDailog" placeholder="通过商品名称进行搜索" class="handle-input mr10" @keyup.enter.native="getAboutWholesalerList()" size="medium"></el-input>
+            <el-button type="primary" icon="search" @click="getAboutWholesalerList()" size="medium">搜索</el-button>
+            <el-table :data="aboutWholesalerList" height="570" size=mini>
+                <el-table-column label="批发商名称">
+                    <template slot-scope="scope">
+                        <div>{{scope.row.wholesalerName}}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="tradeName" label="商品名称">
+                </el-table-column>
+                <el-table-column prop="identifier" label="出入库记录编号">
+                </el-table-column>
+                <el-table-column prop="status" label="入库">
+                </el-table-column>
+                <el-table-column label="单价">
+                    <template slot-scope="scope">
+                        <div style="color:red">{{scope.row.price}}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="quantity" label="数量">
+                </el-table-column>
+                <el-table-column prop="sum" label="总价值">
+                </el-table-column>
+                <el-table-column label=入库时间>
+                    <template slot-scope="scope">
+                        <div>{{scope.row.createTime|moment1}}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="location" label="存放位置">
+                </el-table-column>
+            </el-table>
+            <div class="block">
+                <!-- 分页插件 -->
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="dialogCurrentPage" :page-sizes="[dialogPagesize]" layout="total,prev,pager,next,jumper" :total="dialogTotal">
+                </el-pagination>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -118,31 +158,41 @@ export default {
         return {
             userId: localStorage.getItem('userId'),
             tableData: [],
-        
             selectWord: '',
+            selectWordByDailog: '',
             editVisible: false,
-            delVisible: false,
+            delVisible: false, //删除弹出层
+            OrderTableVisible: false, //订单弹出层
+            aboutWholesalerList: [], //有关这个批发商的订单
             goodsId: "",
-            comeAndOut:"",//出入库判断
+            wholesalerId: "",
+            comeAndOut: "", //出入库判断
             goodsNameList: [],
+            wholesalerName: '',
             form: {
                 wholesalerName: '',
                 linkMan: '',
                 phone: '',
                 address: '',
-                businessScope:"" ,
+                businessScope: "",
                 memo: "",
                 wholesalerId: "",
                 userId: "",
-                status:'wholesaler'
+                status: 'wholesaler'
             },
             idx: -1,
             currentPage: 1,
             pagesize: 5,
             total: 0,
+            dialogCurrentPage: 1,
+            dialogPagesize: 10,
+            dialogTotal:0,
             rules: {
                 linkMan: [{ required: true, message: '请填写联系人', trigger: 'blur' }],
-                phone: [{ required: true, message: '请填写联系电话', trigger: 'blur' }],
+                phone: [{ required: true, message: '请填写联系电话', trigger: 'blur' },
+
+                    { type: 'number', message: '电话必须为数字值' }
+                ],
                 address: [{ required: true, message: '请填写批发商地址', trigger: 'blur' }],
                 businessScope: [{ required: true, message: '请填写批发商经营范围', trigger: 'blur' }],
             }
@@ -158,7 +208,7 @@ export default {
                 .post('/wholesaler/getWholesaler', {
                     userId: this.userId,
                     selectWord: this.selectWord,
-                    status:'wholesaler'
+                    status: 'wholesaler'
                 })
                 .then((response) => {
                     this.total = response.data.total
@@ -167,7 +217,7 @@ export default {
                 })
                 .catch(function(error) {}.bind(this));
         },
-        /*保存商品*/
+        /*保存批发商*/
         saveWholesaler(form) {
             this.$refs[form].validate((valid) => {
                 if (valid) {
@@ -224,7 +274,13 @@ export default {
             this.goodsId = goodsId;
             this.delVisible = true;
         },
-
+        //查看订单处理
+        handleSelect(wholesalerId) {
+            this.wholesalerId = wholesalerId;
+            this.OrderTableVisible = true;
+            console.log(this.wholesalerId);
+            this.getAboutWholesalerList();
+        },
 
         // 保存编辑
         saveEdit() {
@@ -240,7 +296,7 @@ export default {
                     goodsId: this.goodsId
                 })
                 .then((response) => {
-                    console.log(response.data);
+
                     this.reload();
                 })
                 .catch(function(error) {}.bind(this));
@@ -255,13 +311,31 @@ export default {
                     userId: this.userId,
                 })
                 .then((response) => {
-                    console.log(response.data)
+
                     this.goodsNameList = response.data
                 })
                 .catch(function(error) {}.bind(this));
-        }
-
+        },
+        getAboutWholesalerList() {
+            this
+                .$axios
+                .post('/wholesaler/getAboutWholesalerList', {
+                    userId: this.userId,
+                    wholesalerId: this.wholesalerId,
+                    status: 'come',
+                    selectWordByDailog: this.selectWordByDailog
+                })
+                .then((response) => {
+                    console.log(response.data)
+                    this.aboutWholesalerList = response.data.records
+                    this.dialogTotal = response.data.total
+                    this.dialogCurrentPage = response.data.current
+                })
+                .catch(function(error) {}.bind(this));
+        },
     }
+
+
 }
 
 </script>

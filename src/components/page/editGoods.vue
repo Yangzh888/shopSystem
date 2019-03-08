@@ -14,10 +14,15 @@
                 <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true">新增商品信息</el-button>
                 
             </div>
-            <el-table :data="tableData"  class="table"  style="width: 100%" height="500">
+            <el-table :data="tableData" border  class="table"  style="width: 100%" height="500" size=mini  >
                 <el-table-column prop="tradeName" label="商品名称">
                 </el-table-column>
                 <el-table-column prop="profit" label="预期利润·单位 %">
+
+
+                      <template slot-scope="scope">
+                        <div>{{scope.row.profit}}<span>%</span></div>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="type" label="类别">
                 </el-table-column>
@@ -70,7 +75,7 @@
              
                    <el-col :span="24">
                         <el-form-item label="警报库存" prop="warmingNumber">
-                            <el-input v-model="form.warmingNumber"  placeholder=" 当商品数量低于该值会收到警报信息 "></el-input>
+                            <el-input v-model.number="form.warmingNumber"  placeholder=" 当商品数量低于该值会收到警报信息 "></el-input>
                         </el-form-item>
                     </el-col>
                     </el-row>
@@ -84,7 +89,7 @@
                   <el-row>
                     <el-col :span="24">
                         <el-form-item label="预期利润" prop="profit">
-                            <el-input v-model="form.profit" placeholder="输入该商品预期利润，如5%、10%"></el-input>
+                            <el-input v-model.number="form.profit" placeholder="输入该商品预期利润，如5%、10%"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -143,10 +148,14 @@ export default {
             total: 0,
             activeName: 'first',
             rules: {
+                createTime: [{  required: true, message: '请选择日期', trigger: 'blur' }],
                 tradeName: [{ required: true, message: '请填商品名称', trigger: 'blur' }],
-                warmingNumber: [{ required: true, message: '请填写商品警告库存，低于该值系统会发出警告', trigger: 'blur' }],
+                warmingNumber: [{ required: true, message: '请填写商品警告库存，低于该值系统会发出警告', trigger: 'blur' },
+                  { type: 'number', message: '单价必须为数字值'}
+                 ],
                 location: [{ required: true, message: '请填写商品存放位置', trigger: 'blur' }],
-                 profit: [{ required: true, message: '请填写商品预期利润', trigger: 'blur' }],
+                 profit: [{ required: true, message: '请填写商品预期利润', trigger: 'blur' },
+                  { type: 'number', message: '单价必须为数字值'}],
             
 
             }

@@ -7,7 +7,7 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/dashboard'
+            redirect: '/index'
         },
         {
             path: '/',
@@ -15,14 +15,19 @@ export default new Router({
             meta: { title: '自述文件' },
             children:[
                 {
-                    path: '/dashboard',
-                    component: resolve => require(['../components/page/Dashboard.vue'], resolve),
+                    path: '/index',
+                    component: resolve => require(['../components/page/index.vue'], resolve),
                     meta: { title: '系统首页' }
                 },
                 {
                     path: '/comeAndOut',
                     component: resolve => require(['../components/page/ComeAndOut.vue'], resolve),
                     meta: { title: '收支统计' }
+                },
+                 {
+                    path: '/comeAndOutAnalysis',
+                    component: resolve => require(['../components/page/ComeAndOutAnalysis.vue'], resolve),
+                    meta: { title: '收支分析' }
                 },
                 {
                     path: '/goods',

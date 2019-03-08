@@ -6,13 +6,13 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-button type="primary">新建待办信息</el-button>
+            <el-button type="primary" @click='showAddReadyDo=true'>新建待办信息</el-button>
             <el-tabs v-model="message">
                 <el-tab-pane :label="`未读消息(${unReadList.length})`" name="first">
                     <div class="handle-box">
                         <el-input v-model="selectWord" placeholder="通过标题进行搜索" @keyup.enter.native="getUnReadInfo" class="handle-input mr10"></el-input>
                     </div>
-                    <el-table :data="unReadList"  :show-header="false" style="width: 100%">
+                    <el-table :data="unReadList"  :show-header="true" style="width: 100%">
                         <!--  <el-table-column label="标题">
                             <template slot-scope="scope">
                                 <span class="message-title">{{scope.row.title}}</span>
@@ -23,12 +23,12 @@
                                 <div class="message-title">{{scope.row.title}}</div>
                             </template>
                         </el-table-column>
-                         <el-table-column label="标题">
+                         <el-table-column label="内容">
                             <template slot-scope="scope">
                                 <div class="message-title">{{scope.row.memo}}</div>
                             </template>
                         </el-table-column>
-                        <el-table-column  width="180">
+                        <el-table-column label="创建时间" width="180">
                             <template slot-scope="scope">
                                 <div class="todo-item">{{scope.row.createTime|moment}}</div>
                             </template>
@@ -49,12 +49,17 @@
                             <el-input v-model="selectWord" placeholder="通过标题进行搜索"  @keyup.enter.native="getReadInfo" class="handle-input mr10"></el-input>
                         </div>
                         <el-table :data="readList" style="width: 100%">
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
-                                </template>
-                            </el-table-column>
-                              <el-table-column  width="180">
+                             <el-table-column label="标题">
+                            <template slot-scope="scope">
+                                <div class="message-title">{{scope.row.title}}</div>
+                            </template>
+                        </el-table-column>
+                         <el-table-column label="内容">
+                            <template slot-scope="scope">
+                                <div class="message-title">{{scope.row.memo}}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="创建时间" width="180">
                             <template slot-scope="scope">
                                 <div class="todo-item">{{scope.row.createTime|moment}}</div>
                             </template>
@@ -76,12 +81,17 @@
                             <el-input v-model="selectWord" placeholder="通过标题进行搜索" @keyup.enter.native="getRecycleInfo"  class="handle-input mr10"></el-input>
                         </div>
                         <el-table :data="recycleList" :show-header="false" style="width: 100%">
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
-                                </template>
-                            </el-table-column>
-                             <el-table-column  width="180">
+                             <el-table-column label="标题">
+                            <template slot-scope="scope">
+                                <div class="message-title">{{scope.row.title}}</div>
+                            </template>
+                        </el-table-column>
+                         <el-table-column label="内容">
+                            <template slot-scope="scope">
+                                <div class="message-title">{{scope.row.memo}}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="创建时间" width="180">
                             <template slot-scope="scope">
                                 <div class="todo-item">{{scope.row.createTime|moment}}</div>
                             </template>
@@ -98,6 +108,24 @@
                     </template>
                 </el-tab-pane>
             </el-tabs>
+                <el-dialog title="新建待办" :visible.sync="showAddReadyDo" width="30%"  center>
+            <el-form  label-width="80px" :model="readyDoform" ref="readyDoform" :rules="rules">
+                <el-form-item label="标题" prop="title">
+                    <el-input v-model="readyDoform.title"></el-input>
+                </el-form-item>
+                  <el-form-item label="内容" prop="memo">
+                    <el-input v-model="readyDoform.memo"></el-input>
+                </el-form-item>
+                <el-form-item label="创建时间" prop="date">
+                    <el-date-picker v-model="readyDoform.date" type="datetime" placeholder="选择日期时间">
+                    </el-date-picker>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                        <el-button @click="showAddReadyDo = false">取 消</el-button>
+                        <el-button type="primary"  @click="saveReadyDo('readyDoform')" >确 定</el-button>
+                      </span>
+        </el-dialog>
         </div>
     </div>
 </template>
@@ -111,6 +139,7 @@ export default {
     },
     data() {
         return {
+            showAddReadyDo:false,
             othersIdList:[],
             userId: localStorage.getItem('userId'),
             selectWord: '',
@@ -120,10 +149,48 @@ export default {
             othersId:'',
             message: 'first',
             showHeader: false,
-          
+             rules: {
+                date: [{type: 'date',  required: true, message: '请选择日期', trigger: 'blur' }],
+                memo: [{ required: true, message: '请选择商品', trigger: 'blur' }],
+                title: [{ required: true, message: '请填写商品存放位置', trigger: 'blur' }],
+
+            },
+          readyDoform: {
+                title: '',
+                date: '',
+                status:'unRead',
+                memo:''
+            },
         }
     },
     methods: {
+       saveReadyDo(readyDoform) { //保存待办信息
+            this.$refs[readyDoform].validate((valid) => {
+                if (valid) {
+                 this
+                .$axios
+                .post('/others/saveReadyDo', {
+                    userId: this.userId,
+                    readyDoform: this.readyDoform
+                })
+                .then((response) => {
+                    this.reload()
+
+                })
+                .catch(function(error) {}.bind(this));
+                } else {
+                    
+                    return false;
+                }
+            });
+
+        },
+
+
+
+
+
+
         /*获取代办信息*/
         getUnReadInfo() {
             this 
@@ -197,7 +264,7 @@ export default {
                 })
                 .catch(function(error) {}.bind(this));
         },
-        handleReadAll(){
+        handleReadAll(){             //将状态修改为已读
                 this
                 .$axios
                 .post('/others/changeBatchStatus', {
@@ -215,7 +282,7 @@ export default {
                 .catch(function(error) {}.bind(this));
 
         },
-        handleDel(othersId) {
+        handleDel(othersId) {         
           
              this.othersId=othersId;
                 this

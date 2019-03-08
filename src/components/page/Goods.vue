@@ -8,28 +8,41 @@
         <div class="container">
             <div class="handle-box">
                 <el-input v-model="selectWord" placeholder="通过商品名称或编号搜索" class="handle-input mr10" @keyup.enter.native="getGoodsInfo"></el-input>
+                
+    <el-select v-model="selectType" placeholder="请选择出入库类型">
+          <el-option label="全部" value="all"></el-option>
+      <el-option label="出库" value="out"></el-option>
+      <el-option label="入库" value="come"></el-option>
+    </el-select>
+  
                 <el-button type="primary" icon="search" @click="getGoodsInfo()">搜索</el-button>
                 <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true">新增出入库记录</el-button>
             </div>
-            <el-table :data="tableData" border class="table" style="width: 100%" height="500">
+            <el-table :data="tableData" border class="table" style="width: 100%" height="570" size=mini  >
                 <el-table-column prop="tradeName" label="商品名称">
                 </el-table-column>
                 <el-table-column prop="identifier" label="出入库记录编号">
                 </el-table-column>
-                <el-table-column prop="status" label="出库/入库">
+                <el-table-column prop="statusToString" label="出库/入库">
                 </el-table-column>
-                <el-table-column prop="price" label="单价">
+                <el-table-column  label="单价">
+                      <template slot-scope="scope">
+                        <div style="color:red">{{scope.row.price}}</div>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="数量">
                 </el-table-column>
                 <el-table-column prop="sum" label="总价值">
                 </el-table-column>
-                <el-table-column label="进货时间">
+                <el-table-column label=出入库时间>
                     <template slot-scope="scope">
                         <div>{{scope.row.createTime|moment1}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="goodFrom" label="来源">
+                <el-table-column  label="客户/批发商">
+                      <template slot-scope="scope">
+                        <div>{{scope.row.wholesalerName?scope.row.wholesalerName:scope.row.customerName}}</div>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="location" label="存放位置">
                 </el-table-column>
@@ -52,14 +65,18 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="记录日期" prop="createTime">
-                            <el-date-picker type="date" placeholder="选择日期" v-model="form.createTime" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择日期" v-model="form.createTime"  style="width: 100%;"></el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-row>
                  <el-row>
-                      <el-form-item label="" prop="status">
+                      <el-form-item label="出入库状态" prop="status" v-if="form.userId==''">
                 <el-radio v-model="form.status" label="out">出库</el-radio>
-  <el-radio v-model="form.status" label="come">入库</el-radio>
+             <el-radio v-model="form.status" label="come">入库</el-radio>
+</el-form-item>
+                     <el-form-item label="出入库状态" prop="status" v-if="form.userId!=''">
+                <el-radio disabled  v-model="form.status" label="out">出库</el-radio>
+             <el-radio disabled  v-model="form.status" label="come">入库</el-radio>
 </el-form-item>
 </el-row>
                 <el-row>
@@ -75,9 +92,18 @@
                          </el-form-item>
                     </el-col>
                     <el-col v-if="form.status=='come'" :span="12" >
-                        <el-form-item label="来源" prop="goodFrom" >
-                             <el-select   v-model="form.goodFrom" filterable placeholder="选择批发商" width="100%">
+                        <el-form-item label="关联批发商" prop="wholesalerId" >
+                             <el-select   v-model="form.wholesalerId" filterable placeholder="选择批发商" width="100%">
                             <el-option v-for="item in getWholesalerNameList" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                          <!--   <el-input v-model="form.goodFrom"></el-input> -->
+                        </el-form-item>
+                    </el-col>
+                      <el-col v-if="form.status=='out'" :span="12" >
+                        <el-form-item label="关联客户" prop="customerId" >
+                             <el-select   v-model="form.customerId" filterable placeholder="选择客户" width="100%">
+                            <el-option v-for="item in getcustomerNameList" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                           <!--   <el-input v-model="form.goodFrom"></el-input> -->
@@ -87,12 +113,12 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="单价" prop="price"  >
-                            <el-input v-model="form.price"></el-input>
+                            <el-input v-model.number="form.price"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="数量" prop="quantity">
-                            <el-input v-model="form.quantity"></el-input>
+                            <el-input v-model.number="form.quantity"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -128,6 +154,7 @@ export default {
         this.getGoodsInfo();
         this.getGoodsInfoList();
         this.getWholesalerList();
+        this.getCustomerNameList();
     },
   /*  created() {
     const start = new Date();
@@ -138,39 +165,45 @@ export default {
         return {
             userId: localStorage.getItem('userId'),
             tableData: [],
-        
+            selectType:'',
             selectWord: '',
             editVisible: false,
             delVisible: false,
             goodsId: "",
             goodsNameList: [],         //可选择商品
-            getWholesalerNameList:[],  //可选择来源
+            getWholesalerNameList:[],  //可选择批发商
+            getcustomerNameList:[],//可选择客户
             form: {
-                status:"come",//出入库判断
+                status:'',//出入库判断
                 createTime: '',
                 tradeName: '',
                 goodFrom: '',
                 location: '',
-                price: 1,
+                price: '',
                 quantity: 1,
                 goodsId: "",
                 userId: "",
                 identifier: "",
-                goodsInfoId:""
+                goodsInfoId:"",
+                wholesalerId:"",
+                wholesalerName:"",
+                customerId:"",
+                customerName:"",
             },
             idx: -1,
             currentPage: 1,
-            pagesize: 5,
+            pagesize: 10,
             total: 0,
             rules: {
-                createTime: [{  required: true, message: '请选择日期', trigger: 'blur' }],
+                createTime: [{   required: true, message: '请选择日期', trigger: 'blur' }],
                 tradeName: [{ required: true, message: '请选择商品，若无你希望的商品，请去商品配置菜单出配置', trigger: 'blur' }],
                 location: [{ required: true, message: '请填写商品存放位置', trigger: 'blur' }],
                  status: [{ required: true, message: '类型不能为空', trigger: 'blur' }],
                 price: [{ required: true, message: '请填写商品单价', trigger: 'blur'},
-                 
+                  { type: 'number', message: '单价必须为数字值'}
                 ],
-                quantity: [{ required: true, message: '请填写商品数量', trigger: 'blur' }],
+                quantity: [{ required: true, message: '请填写商品数量', trigger: 'blur' },
+                 { type: 'number', message: '数量也必须为数字值'}],
 
             }
         }
@@ -179,13 +212,14 @@ export default {
     methods: {
 
         /*获取商品信息*/
-        getGoodsInfo() {
+        getGoodsInfo(current) {
             this
                 .$axios
                 .post('/goods/getGoodsInfo', {
+                    current:current,
                     userId: this.userId,
-                    selectWord: this.selectWord
-
+                    selectWord: this.selectWord,
+selectType:this.selectType
                 })
                 .then((response) => {
                     this.total = response.data.total
@@ -200,7 +234,6 @@ export default {
         saveGoods(form) {
             this.$refs[form].validate((valid) => {
                 if (valid) {
-
                     this
                         .$axios
                         .post('/goods/saveGoods', {
@@ -237,6 +270,7 @@ export default {
         /*分页处理*/
         handleCurrentChange(val) {
             this.currentPage = val;
+            this.getGoodsInfo(val);
             console.log(`当前页: ${val}`);
         },
         /*编辑商品处理*/
@@ -254,7 +288,11 @@ export default {
                 goodsId: item.goodsId,
                 userId: item.userId,
                 identifier: item.identifier,
-                goodsInfoId:item.goodsInfoId
+                goodsInfoId:item.goodsInfoId,
+                wholesalerId:item.wholesalerId,
+                wholesalerName:item.wholesalerName,
+                customerId:item.customerId,
+                customerName:item.customerName,
             }
             this.editVisible = true;
         },
@@ -279,12 +317,18 @@ export default {
                     goodsId: this.goodsId
                 })
                 .then((response) => {
+                    if(response.data.code===200){
+                     this.$message.success(response.data.message);
+                     this.reload();
+                    }
+                    else{
+                        this.$message.error(response.data.message);
+                    }
+            this.delVisible = false;
                     
-                    this.reload();
                 })
                 .catch(function(error) {}.bind(this));
-            this.$message.success('删除成功');
-            this.delVisible = false;
+           
 
         },
         /*获取商品的信息-选择框时用到-在商品配置那里配置后可以选择*/
@@ -313,7 +357,28 @@ export default {
                     this.getWholesalerNameList = response.data
                 })
                 .catch(function(error) {}.bind(this));
+        },
+             getCustomerNameList() {
+            this
+                .$axios
+                .post('/wholesaler/getCustomerNameList', {
+                    userId: this.userId,
+                    status:'customer'
+                })
+                .then((response) => {
+                    
+                    this.getcustomerNameList = response.data
+                })
+                .catch(function(error) {}.bind(this));
+        },
+     /*   tableRowClassName({row, rowIndex}) {
+        if (rowIndex === 1) {
+          return 'warning-row';
+        } else if (rowIndex === 3) {
+          return 'success-row';
         }
+        return '';
+      }*/
 
     }
 }
@@ -346,5 +411,12 @@ export default {
 .red {
     color: #ff0000;
 }
+/* .table-container-el-table.warning-row {
+    background: oldlace;
+  }
+
+ .table-container-el-table.success-row {
+    background: #f0f9eb;
+  }*/
 
 </style>

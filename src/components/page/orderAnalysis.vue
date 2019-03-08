@@ -45,7 +45,7 @@ export default {
             orderInfo: {},
             activeName: 'first',
             userId: localStorage.getItem('userId'),
-              aboutOrderchartData: {
+            aboutOrderchartData: {
           columns: ['月份', '金额'],
           rows: []
         },
