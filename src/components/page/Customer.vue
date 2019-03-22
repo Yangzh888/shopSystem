@@ -25,9 +25,9 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"v-if="scope.row.creator==relationUserInfoId||level>0" >编辑</el-button>
                          <el-button type="text" icon="el-icon-info" class="info" @click="handleSelect(scope.row.wholesalerId)">相关订单</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.goodsId)">删除</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.goodsId)" v-if="scope.row.creator==relationUserInfoId||level>0" >删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -111,6 +111,8 @@
                 </el-table-column>
                 <el-table-column prop="sum" label="总价值">
                 </el-table-column>
+                 <el-table-column prop="updater" label="创建人">
+                </el-table-column>
                 <el-table-column label=出库时间>
                     <template slot-scope="scope">
                         <div>{{scope.row.createTime|moment1}}</div>
@@ -128,6 +130,16 @@
     </div>
 </template>
 <script>
+    import {isvalidPhone} from '../page/validate'
+      var validPhone=(rule, value,callback)=>{
+      if (!value){
+          callback(new Error('请输入电话号码'))
+      }else  if (!isvalidPhone(value)){
+        callback(new Error('请输入正确的11位手机号码'))
+      }else {
+          callback()
+      }
+  }
 export default {
     inject: ['reload'],
     userId: '',
@@ -138,6 +150,8 @@ export default {
     data() {
         return {
             userId: localStorage.getItem('userId'),
+                level: localStorage.getItem('level'),
+                  relationUserInfoId: localStorage.getItem('relationUserInfoId'),
             tableData: [],
         customerId:'',
         current:1,
@@ -151,6 +165,8 @@ export default {
             goodsNameList: [],
             aboutCustmerList:[],
             form: {
+                   updater: localStorage.getItem('relationUserInfoName'),         //默认该字段为创建人姓名
+                creator: localStorage.getItem('relationUserInfoId'),//默认该字段为创建人Id
                 wholesalerName: '',
                 linkMan: '',
                 phone: '',
@@ -170,9 +186,9 @@ export default {
             dialogTotal:0,
             rules: {
                 linkMan: [{ required: true, message: '请填写联系人', trigger: 'blur' }],
-                phone: [{ required: true, message: '请填写联系电话', trigger: 'blur' },
-         
-                  { type: 'number', message: '电话必须为数字值'}],
+                 phone: [
+            { required: true, trigger: 'blur', validator: validPhone }//这里需要用到全局变量
+          ]     ,
                 address: [{ required: true, message: '请填写批发商地址', trigger: 'blur' }],
            
             }

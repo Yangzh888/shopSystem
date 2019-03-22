@@ -1,7 +1,6 @@
 <template>
     <div class="sidebar">
-        <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
-            text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
+        <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
             <template v-for="item in items">
                 <template v-if="item.subs">
                     <el-submenu :index="item.index" :key="item.index">
@@ -10,7 +9,7 @@
                         </template>
                         <template v-for="subItem in item.subs">
                             <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
-                                <template slot="title">{{ subItem.title }}</template>
+                                <template slot="title" >{{ subItem.title }}</template>
                                 <el-menu-item v-for="(threeItem,i) in subItem.subs" :key="i" :index="threeItem.index">
                                     {{ threeItem.title }}
                                 </el-menu-item>
@@ -30,178 +29,190 @@
         </el-menu>
     </div>
 </template>
-
 <script>
-    import bus from '../common/bus';
-    export default {
-        data() {
-            return {
-                collapse: false,
-                items: [
-                    {
-                        icon: 'el-icon-lx-home',
-                        index: 'index',
-                        title: '系统首页'
-                    },
-                    {
-                        icon: 'el-icon-lx-cascades',
-                        index: '1',
-                        title: '商品管理',
-                        subs: [
-                            {
-                                index: 'goods',
-                                title: '商品出入库记录'
-                            },
-                             {
-                                index: 'editGoods',
-                                title: '配置商品'
-                            },
-                           
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-lx-copy',
-                        index: 'readyDo',
-                        title: '待办管理'
-                    },
-                   /* {
-                        icon: 'el-icon-lx-calendar',
-                        index: '3',
-                        title: '客户管理',
-                        subs: [
-                            {
-                                index: 'form',
-                                title: '基本表单'
-                            },
-                            {
-                                index: '3-2',
-                                title: '三级菜单',
-                                subs: [
-                                    {
-                                        index: 'editor',
-                                        title: '富文本编辑器'
-                                    },
-                                    {
-                                        index: 'markdown',
-                                        title: 'markdown编辑器'
-                                    },
-                                ]
-                            },
-                            {
-                                index: 'upload',
-                                title: '文件上传'
-                            }
-                        ]
-                    },*/
-                    {
-                        icon: 'el-icon-lx-calendar',
-                        index: '2',
-                        title: '客户管理',
-                        subs: [
-                            {
-                                index: 'wholesaler',
-                                title: '批发商相关'
-                            },
-                        
-                            {
-                                index: 'customer',
-                                title: '客户管理'
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-lx-emoji',
-                        index: '3',
-                        title: '收支统计',
-                        subs:[ 
-                          {
-                                index: 'comeAndOut',
-                                title: '按日记录'
-                            },
-                        
-                            {
-                                index: 'comeAndOutAnalysis',
-                                title: '记录分析'
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-lx-favor',
-                        index: '4',
-                        title: '数据分析',
-                        subs:[
-                         {
-                                index: 'dataAnalysis',
-                                title: '商铺概括分析'
-                            },
-                        
-                            {
-                                index: 'orderAnalysis',
-                                title: '订单分析'
-                            },
-                             {
-                                index: 'wholesalerAnalysis',
-                                title: '客户分析'
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-rank',
-                        index: 'search',
-                        title: '查找'
-                    },
-                    {
-                        icon: 'el-icon-lx-warn',
-                        index: '6',
-                        title: '个人信息',
-                        subs: [
-                          /*  {
-                                index: 'permission',
-                                title: '信息管理'
-                            },*/
-                            {
-                                index: 'userInfo',
-                                title: '个人信息'
-                            },
-                            {
-                                index: '404',
-                                title: '404页面'
-                            }
-                        ]
-                    }
-                ]
-            }
-        },
-        computed:{
-            onRoutes(){
-                return this.$route.path.replace('/','');
-            }
-        },
-        created(){
-            // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-            bus.$on('collapse', msg => {
-                this.collapse = msg;
-            })
-        }
-    }
-</script>
+import bus from '../common/bus';
+export default {
+    mounted: function() {
+this.deleteRow();
+    },
+    data() {
+        return {
+            level: localStorage.getItem('level'),
+          goodslevel: localStorage.getItem('goodslevel'),
+            readyDolevel: localStorage.getItem('readyDolevel'),
+            customerlevel: localStorage.getItem('customerlevel'),
+            comeAndOutlevel: localStorage.getItem('comeAndOutlevel'),
+            anaylyslevel: localStorage.getItem('anaylyslevel'),
+            collapse: false,
+            items: [],
+            tab:[{
+                    icon: 'el-icon-lx-home',
+                    index: 'index',
+                    title: '系统首页'
+                },
+                {
+                    icon: 'el-icon-lx-cascades',
+                    index: '1',
+                    title: '商品管理',
+                    subs: [{
+                            index: 'goods',
+                            title: '商品出入库记录'
+                        },
+                        {
+                            index: 'editGoods',
+                            title: '添加商品'
+                        },
 
+                    ]
+                },
+                {
+                    icon: 'el-icon-lx-copy',
+                    index: 'readyDo',
+                    title: '待办管理'
+                },
+                {
+                    icon: 'el-icon-lx-calendar',
+                    index: '3',
+                    title: '客户管理',
+                    subs: [{
+                            index: 'wholesaler',
+                            title: '批发商管理'
+                        },
+
+                        {
+                            index: 'customer',
+                            title: '客户管理'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-lx-emoji',
+                    index: '4',
+                    title: '收支统计',
+                    subs: [{
+                            index: 'comeAndOut',
+                            title: '按日记录'
+                        },
+
+                        {
+                            index: 'comeAndOutAnalysis',
+                            title: '记录分析'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-lx-favor',
+                    index: '5',
+                    title: '数据分析',
+                    subs: [{
+                            index: 'dataAnalysis',
+                            title: '商铺概括分析'
+                        },
+
+                        {
+                            index: 'orderAnalysis',
+                            title: '订单分析'
+                        },
+                        {
+                            index: 'wholesalerAnalysis',
+                            title: '客户分析'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-setting',
+                    index: 'permission',
+                    title: '权限管理'
+                },
+                {
+                    icon: 'el-icon-lx-warn',
+                    index: '6',
+                    title: '个人信息',
+                    subs: [
+                        /*  {
+                              index: 'permission',
+                              title: '信息管理'
+                          },*/
+                        {
+                            index: 'userInfo',
+                            title: '个人信息'
+                        },
+                        {
+                            index: '404',
+                            title: '404页面'
+                        }
+                    ]
+                },
+                /* {
+                    icon: 'el-icon-setting',
+                    index: '/search',
+                    title: '查找'
+                },*/
+            ]
+
+        }
+    },
+    computed: {
+        onRoutes() {
+            return this.$route.path.replace('/', '');
+        },
+
+    },
+    created() {
+        // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+        bus.$on('collapse', msg => {
+            this.collapse = msg;
+        })
+    },
+    methods: {
+        // 无权限用户控制导航栏
+        deleteRow() {
+              console.log("test")
+              console.log("商品权限"+this.goodslevel)
+              console.log("待办权限"+this.readyDolevel)
+              console.log("收支权限"+this.comeAndOutlevel)
+              console.log("客户权限"+this.customerlevel)
+              console.log("数据分析权限"+this.anaylyslevel)
+              console.log("/test")
+         
+            // const a=[this.goodslevel,this.readyDolevel,this.comeAndOutlevel,this.customerlevel,this.anaylyslevel]
+    
+    this.items.push(this.tab[0]); 
+    var  tabname=[true,this.goodslevel,this.readyDolevel,this.customerlevel,this.comeAndOutlevel,this.anaylyslevel];
+    for(var i=1;i<6;i++){
+      if(tabname[i]=='true')
+      {
+        this.items.push(this.tab[i]);
+      }
+    }
+             if(this.level>0){  this.items.push(this.tab[6]); }
+             this.items.push(this.tab[7]); 
+            
+            }
+    }
+}
+
+</script>
 <style scoped>
-    .sidebar{
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 70px;
-        bottom:0;
-        overflow-y: scroll;
-    }
-    .sidebar::-webkit-scrollbar{
-        width: 0;
-    }
-    .sidebar-el-menu:not(.el-menu--collapse){
-        width: 250px;
-    }
-    .sidebar > ul {
-        height:100%;
-    }
+.sidebar {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 70px;
+    bottom: 0;
+    overflow-y: scroll;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 0;
+}
+
+.sidebar-el-menu:not(.el-menu--collapse) {
+    width: 250px;
+}
+
+.sidebar>ul {
+    height: 100%;
+}
+
 </style>

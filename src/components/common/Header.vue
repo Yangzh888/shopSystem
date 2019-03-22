@@ -4,7 +4,7 @@
         <div class="collapse-btn" @click="collapseChage">
             <i class="el-icon-menu"></i>
         </div>
-        <div class="logo">商铺管理系统</div>
+        <div class="logo">商铺管理子系统</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -58,14 +58,14 @@
                 fullscreen: false,
                 name: 'Yanzhenhua',
                 readyDoNumber:0,
-          
+               anaylyslevel: localStorage.getItem('anaylyslevel'),
               
             }
         },
         computed:{
 
             username(){
-                let username = localStorage.getItem('ms_username');
+                let username = localStorage.getItem('relationUserInfoName');
                 return username ? username : this.name;
             }
         },

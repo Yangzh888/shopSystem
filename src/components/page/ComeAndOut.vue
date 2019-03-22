@@ -1,4 +1,4 @@
-<template>
+<template >
     <div class="table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
@@ -14,7 +14,7 @@
             </div>
             <el-tabs type="border-card">
                 <el-tab-pane label="按天查看">
-                    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%" height="500" size="mini">
+                    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%" height="500" >
                         <el-table-column label="记录日期" width="180">
                             <template slot-scope="scope">
                                 <div>{{scope.row.createTime|moment1}}</div>
@@ -23,6 +23,8 @@
                         <el-table-column prop="inSum" label="本次收入(元)" width="180">
                         </el-table-column>
                         <el-table-column prop="outSum" label="本次支出(元)">
+                        </el-table-column>
+                         <el-table-column prop="updater" label="记录人">
                         </el-table-column>
                         <el-table-column prop="memo" label="备注信息">
                         </el-table-column>
@@ -33,8 +35,8 @@
                         </el-table-column>
                         <el-table-column label="操作" width="180" align="center">
                             <template slot-scope="scope">
-                                <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                                <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.budgetId)">删除</el-button>
+                                <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" v-if="scope.row.creator==relationUserInfoId||level>0">编辑</el-button>
+                                <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.budgetId)" v-if="scope.row.creator==relationUserInfoId||level>0">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -44,19 +46,7 @@
                         </el-pagination>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="按月查看" tab-click="getOneMonthComeAndOut()">
-                    <div class="block">
-                        <el-row>
-                            <el-date-picker v-model="selectMonth" type="month" placeholder="选择月" value-format="yyyy-MM">
-                            </el-date-picker>
-                            <el-button type="primary" icon="search" @click="getOneMonthComeAndOut()">搜索</el-button>
-                        </el-row>
-                        <el-row>
-                            <ve-line :data="chartData"></ve-line>
-                        </el-row>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="按年查看">按年查看</el-tab-pane>
+              
             </el-tabs>
         </div>
         <!-- 编辑弹出框 -->
@@ -92,6 +82,8 @@ export default {
     inject: ['reload'],
     data() {
         return {
+             level: localStorage.getItem('level'),
+                  relationUserInfoId: localStorage.getItem('relationUserInfoId'),
             selectWord: "",
             selectMonth: '',
             messageTip: '',
@@ -99,6 +91,8 @@ export default {
             tableData: [],
             saveBudgetDailog: false,
             form: {
+                     updater: localStorage.getItem('relationUserInfoName'),         //默认该字段为创建人姓名
+                creator: localStorage.getItem('relationUserInfoId'),//默认该字段为创建人Id
                 inSum: '',
                 outSum: '',
                 createTime: '',
@@ -157,11 +151,6 @@ export default {
             });
 
         },
-
-
-
-
-
         getBubgetData() {
 
             this

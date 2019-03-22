@@ -12,7 +12,7 @@
                     <div class="handle-box">
                         <el-input v-model="selectWord" placeholder="通过标题进行搜索" @keyup.enter.native="getUnReadInfo" class="handle-input mr10"></el-input>
                     </div>
-                    <el-table :data="unReadList"  :show-header="true" style="width: 100%">
+                    <el-table :data="unReadList" :show-header="true" style="width: 100%">
                         <!--  <el-table-column label="标题">
                             <template slot-scope="scope">
                                 <span class="message-title">{{scope.row.title}}</span>
@@ -23,9 +23,14 @@
                                 <div class="message-title">{{scope.row.title}}</div>
                             </template>
                         </el-table-column>
-                         <el-table-column label="内容">
+                        <el-table-column label="内容">
                             <template slot-scope="scope">
                                 <div class="message-title">{{scope.row.memo}}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="创建人">
+                            <template slot-scope="scope">
+                                <div style="color: red;font-weight: bold;">{{scope.row.updater}}</div>
                             </template>
                         </el-table-column>
                         <el-table-column label="创建时间" width="180">
@@ -46,27 +51,32 @@
                 <el-tab-pane :label="`已读消息(${readList.length})`" name="second">
                     <template v-if="message === 'second'">
                         <div class="handle-box">
-                            <el-input v-model="selectWord" placeholder="通过标题进行搜索"  @keyup.enter.native="getReadInfo" class="handle-input mr10"></el-input>
+                            <el-input v-model="selectWord" placeholder="通过标题进行搜索" @keyup.enter.native="getReadInfo" class="handle-input mr10"></el-input>
                         </div>
                         <el-table :data="readList" style="width: 100%">
-                             <el-table-column label="标题">
+                            <el-table-column label="标题">
+                                <template slot-scope="scope">
+                                    <div class="message-title">{{scope.row.title}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="内容">
+                                <template slot-scope="scope">
+                                    <div class="message-title">{{scope.row.memo}}</div>
+                                </template>
+                            </el-table-column>
+                             <el-table-column label="更新人">
                             <template slot-scope="scope">
-                                <div class="message-title">{{scope.row.title}}</div>
+                                <div style="color: red;font-weight: bold;">{{scope.row.updater}}</div>
                             </template>
                         </el-table-column>
-                         <el-table-column label="内容">
-                            <template slot-scope="scope">
-                                <div class="message-title">{{scope.row.memo}}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="创建时间" width="180">
-                            <template slot-scope="scope">
-                                <div class="todo-item">{{scope.row.createTime|moment}}</div>
-                            </template>
-                        </el-table-column>
+                            <el-table-column label="创建时间" width="180">
+                                <template slot-scope="scope">
+                                    <div class="todo-item">{{scope.row.createTime|moment}}</div>
+                                </template>
+                            </el-table-column>
                             <el-table-column width="120">
                                 <template slot-scope="scope">
-                                    <el-button type="danger" @click="handleDel(scope.row.othersId)" >删除</el-button>
+                                    <el-button type="danger" @click="handleDel(scope.row.othersId)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -78,24 +88,29 @@
                 <el-tab-pane :label="`回收站(${recycleList.length})`" name="third">
                     <template v-if="message === 'third'">
                         <div class="handle-box">
-                            <el-input v-model="selectWord" placeholder="通过标题进行搜索" @keyup.enter.native="getRecycleInfo"  class="handle-input mr10"></el-input>
+                            <el-input v-model="selectWord" placeholder="通过标题进行搜索" @keyup.enter.native="getRecycleInfo" class="handle-input mr10"></el-input>
                         </div>
-                        <el-table :data="recycleList" :show-header="false" style="width: 100%">
-                             <el-table-column label="标题">
+                        <el-table :data="recycleList"  style="width: 100%">
+                            <el-table-column label="标题">
+                                <template slot-scope="scope">
+                                    <div class="message-title">{{scope.row.title}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="内容">
+                                <template slot-scope="scope">
+                                    <div class="message-title">{{scope.row.memo}}</div>
+                                </template>
+                            </el-table-column>
+                             <el-table-column label="更新人">
                             <template slot-scope="scope">
-                                <div class="message-title">{{scope.row.title}}</div>
+                                <div style="color: red;font-weight: bold;">{{scope.row.updater}}</div>
                             </template>
                         </el-table-column>
-                         <el-table-column label="内容">
-                            <template slot-scope="scope">
-                                <div class="message-title">{{scope.row.memo}}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="创建时间" width="180">
-                            <template slot-scope="scope">
-                                <div class="todo-item">{{scope.row.createTime|moment}}</div>
-                            </template>
-                        </el-table-column>
+                            <el-table-column label="创建时间" width="180">
+                                <template slot-scope="scope">
+                                    <div class="todo-item">{{scope.row.createTime|moment}}</div>
+                                </template>
+                            </el-table-column>
                             <el-table-column width="120">
                                 <template slot-scope="scope">
                                     <el-button @click="handleRestore(scope.row.othersId)">还原</el-button>
@@ -108,24 +123,24 @@
                     </template>
                 </el-tab-pane>
             </el-tabs>
-                <el-dialog title="新建待办" :visible.sync="showAddReadyDo" width="30%"  center>
-            <el-form  label-width="80px" :model="readyDoform" ref="readyDoform" :rules="rules">
-                <el-form-item label="标题" prop="title">
-                    <el-input v-model="readyDoform.title"></el-input>
-                </el-form-item>
-                  <el-form-item label="内容" prop="memo">
-                    <el-input v-model="readyDoform.memo"></el-input>
-                </el-form-item>
-                <el-form-item label="创建时间" prop="date">
-                    <el-date-picker v-model="readyDoform.date" type="datetime" placeholder="选择日期时间">
-                    </el-date-picker>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
+            <el-dialog title="新建待办" :visible.sync="showAddReadyDo" width="30%" center>
+                <el-form label-width="80px" :model="readyDoform" ref="readyDoform" :rules="rules">
+                    <el-form-item label="标题" prop="title">
+                        <el-input v-model="readyDoform.title"></el-input>
+                    </el-form-item>
+                    <el-form-item label="内容" prop="memo">
+                        <el-input v-model="readyDoform.memo"></el-input>
+                    </el-form-item>
+                    <el-form-item label="创建时间" prop="date">
+                        <el-date-picker v-model="readyDoform.date" type="datetime" placeholder="选择日期时间">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
                         <el-button @click="showAddReadyDo = false">取 消</el-button>
                         <el-button type="primary"  @click="saveReadyDo('readyDoform')" >确 定</el-button>
                       </span>
-        </el-dialog>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -139,47 +154,50 @@ export default {
     },
     data() {
         return {
-            showAddReadyDo:false,
-            othersIdList:[],
+            showAddReadyDo: false,
+            othersIdList: [],
             userId: localStorage.getItem('userId'),
+            relationUserInfoId: localStorage.getItem('relationUserInfoId'),
             selectWord: '',
             unReadList: [],
-            readList:[],
-            recycleList:[],
-            othersId:'',
+            readList: [],
+            recycleList: [],
+            othersId: '',
             message: 'first',
             showHeader: false,
-             rules: {
-                date: [{type: 'date',  required: true, message: '请选择日期', trigger: 'blur' }],
+            rules: {
+                date: [{ type: 'date', required: true, message: '请选择日期', trigger: 'blur' }],
                 memo: [{ required: true, message: '请选择商品', trigger: 'blur' }],
                 title: [{ required: true, message: '请填写商品存放位置', trigger: 'blur' }],
 
             },
-          readyDoform: {
+            readyDoform: {
+                updater: localStorage.getItem('relationUserInfoName'), //默认该字段为创建人姓名
+                creator: localStorage.getItem('relationUserInfoId'), //默认该字段为创建人Id
                 title: '',
                 date: '',
-                status:'unRead',
-                memo:''
+                status: 'unRead',
+                memo: ''
             },
         }
     },
     methods: {
-       saveReadyDo(readyDoform) { //保存待办信息
+        saveReadyDo(readyDoform) { //保存待办信息
             this.$refs[readyDoform].validate((valid) => {
                 if (valid) {
-                 this
-                .$axios
-                .post('/others/saveReadyDo', {
-                    userId: this.userId,
-                    readyDoform: this.readyDoform
-                })
-                .then((response) => {
-                    this.reload()
+                    this
+                        .$axios
+                        .post('/others/saveReadyDo', {
+                            userId: this.userId,
+                            readyDoform: this.readyDoform
+                        })
+                        .then((response) => {
+                            this.reload()
 
-                })
-                .catch(function(error) {}.bind(this));
+                        })
+                        .catch(function(error) {}.bind(this));
                 } else {
-                    
+
                     return false;
                 }
             });
@@ -193,12 +211,12 @@ export default {
 
         /*获取代办信息*/
         getUnReadInfo() {
-            this 
+            this
                 .$axios
                 .post('/others/selectPage', {
                     userId: this.userId,
                     selectWord: this.selectWord,
-                    status:'unRead'
+                    status: 'unRead'
                 })
                 .then((response) => {
                     this.total = response.data.total
@@ -209,13 +227,13 @@ export default {
                 .catch(function(error) {}.bind(this));
 
         },
-         getReadInfo() {               //获取已读数据
+        getReadInfo() { //获取已读数据
             this
                 .$axios
                 .post('/others/selectPage', {
                     userId: this.userId,
                     selectWord: this.selectWord,
-                    status:'read'
+                    status: 'read'
                 })
                 .then((response) => {
                     this.total = response.data.total
@@ -225,14 +243,14 @@ export default {
                 })
                 .catch(function(error) {}.bind(this));
 
-        }, 
-         getRecycleInfo() {            //获取回收站数据
+        },
+        getRecycleInfo() { //获取回收站数据
             this
                 .$axios
                 .post('/others/selectPage', {
                     userId: this.userId,
                     selectWord: this.selectWord,
-                    status:'recycle'
+                    status: 'recycle'
                 })
                 .then((response) => {
                     this.total = response.data.total
@@ -243,77 +261,85 @@ export default {
                 .catch(function(error) {}.bind(this));
 
         },
-        handleRead(othersId) {               //将状态修改为已读
-       
-             this.othersId=othersId;
-                this
+        handleRead(othersId) { //将状态修改为已读
+
+            this.othersId = othersId;
+            this
                 .$axios
                 .post('/others/changeStatus', {
                     othersId: this.othersId,
-                    status:'read'
+                    status: 'read',
+                    relationUserInfoId: this.relationUserInfoId,
+                    relationUserInfoName:this.relationUserInfoName
                 })
                 .then((response) => {
-                
-                    if(response.data.code=='200'){
+
+                    if (response.data.code == '200') {
                         this.$message.success(response.data.data);
-                    }else{
-                         this.$message.success(response.data.data);
+                    } else {
+                        this.$message.success(response.data.data);
                     }
                     this.reload();
-                    
+
                 })
                 .catch(function(error) {}.bind(this));
         },
-        handleReadAll(){             //将状态修改为已读
-                this
+        handleReadAll() { //将状态修改为已读
+            this
                 .$axios
                 .post('/others/changeBatchStatus', {
-                    othersFromList:this.unReadList,
-                    status:'read'
+                    othersFromList: this.unReadList,
+                    status: 'read',
+                    relationUserInfoId: this.relationUserInfoId,
+                     relationUserInfoName:this.relationUserInfoName
                 })
                 .then((response) => {
-                if(response.data.code=='200'){
+                    if (response.data.code == '200') {
                         this.$message.success(response.data.data);
-                    }else{
-                         this.$message.error(response.data.data);
+                    } else {
+                        this.$message.error(response.data.data);
                     }
                     this.reload();
                 })
                 .catch(function(error) {}.bind(this));
 
         },
-        handleDel(othersId) {         
-          
-             this.othersId=othersId;
-                this
+        handleDel(othersId) {
+
+            this.othersId = othersId;
+            this
                 .$axios
                 .post('/others/changeStatus', {
                     othersId: this.othersId,
-                    status:'recycle'
+                    status: 'recycle',
+                    relationUserInfoId: this.relationUserInfoId,
+                     relationUserInfoName:this.relationUserInfoName
                 })
                 .then((response) => {
-                    if(response.data.code=='200'){
+                    if (response.data.code == '200') {
                         this.$message.success(response.data.data);
-                    }else{
-                         this.$message.success(response.data.data);
+                    } else {
+                        this.$message.success(response.data.data);
                     }
                     this.reload();
-                    
+
                 })
                 .catch(function(error) {}.bind(this));
         },
-         handleDelAll(){
-                this
+        handleDelAll() {
+            this
                 .$axios
                 .post('/others/changeBatchStatus', {
-                    othersFromList:this.readList,
-                    status:'recycle'
+                    othersFromList: this.readList,
+                    status: 'recycle',
+                    relationUserInfoId: this.relationUserInfoId,
+                     relationUserInfoName:this.relationUserInfoName
                 })
                 .then((response) => {
-                if(response.data.code=='200'){
+                    if (response.data.code == '200') {
                         this.$message.success(response.data.data);
-                    }else{
-                         this.$message.error(response.data.data);
+                    } else {
+                        this.$message.error(response.data.data);
                     }
                     this.reload();
                 })
@@ -321,37 +347,41 @@ export default {
 
         },
         handleRestore(othersId) {
-           this.othersId=othersId;
-                this
+            this.othersId = othersId;
+            this
                 .$axios
                 .post('/others/changeStatus', {
                     othersId: this.othersId,
-                    status:'unRead'
+                    status: 'unRead',
+                    relationUserInfoId: this.relationUserInfoId,
+                     relationUserInfoName:this.relationUserInfoName
                 })
                 .then((response) => {
-                  
-                    if(response.data.code=='200'){
+
+                    if (response.data.code == '200') {
                         this.$message.success(response.data.data);
-                    }else{
-                         this.$message.success(response.data.data);
+                    } else {
+                        this.$message.success(response.data.data);
                     }
                     this.reload();
-                    
+
                 })
                 .catch(function(error) {}.bind(this));
         },
-         handleRestoreAll(){
-                this
+        handleRestoreAll() {
+            this
                 .$axios
                 .post('/others/changeBatchStatus', {
-                    othersFromList:this.recycleList,
-                    status:'delete'
+                    othersFromList: this.recycleList,
+                    status: 'delete',
+                    relationUserInfoId: this.relationUserInfoId,
+                     relationUserInfoName:this.relationUserInfoName
                 })
                 .then((response) => {
-                if(response.data.code=='200'){
+                    if (response.data.code == '200') {
                         this.$message.success(response.data.data);
-                    }else{
-                         this.$message.error(response.data.data);
+                    } else {
+                        this.$message.error(response.data.data);
                     }
                     this.reload();
                 })
@@ -359,7 +389,7 @@ export default {
 
         },
     }
-  
+
 }
 
 </script>

@@ -51,6 +51,7 @@
     </div>
 </template>
 <script>
+    import md5 from 'js-md5';
 export default {
 
     mounted: function() {
@@ -134,7 +135,11 @@ export default {
                         .$axios
                         .post('/userInfo/checkAnsToChangePassWord', {
                             userId: this.userId,
-                            changeForm: this.changeForm
+                         
+                           newPassWord:this.changeForm.newPassWord,
+                             forgetQue:this.changeForm.forgetQue,
+                               forgetAnsCheck:this.changeForm.forgetAnsCheck
+
                         })
                         .then((response) => {
                             if (response.data.code === 200) {

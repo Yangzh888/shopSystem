@@ -59,6 +59,9 @@ export default {
                     selectMonth: this.selectMonth,
                 })
                 .then((response) => {
+                    if(response.data.code==200){
+                       this.showEcharts=true
+                    }
                     if (response.data.code == 400) {
                         this.showEcharts = false
                        this.showNull=true

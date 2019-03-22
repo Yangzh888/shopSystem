@@ -49,7 +49,7 @@ export default {
             activeName: 'first',
             userId: localStorage.getItem('userId'),
               aboutOrderchartData: {
-          columns: ['月份', '新增数量'],
+          columns: ['月份', '总数量'],
           rows: []
         },
         }

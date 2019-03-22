@@ -7,6 +7,9 @@
                         <span>商铺管理系统描述</span>
                     </div>
                     <div style="width: 100%;height: 300px">
+                        <div class="text item">
+                            <el-tree :data="data"  @node-click="handleNodeClick" node-key="id" :default-expanded-keys="[1,2,3,4]" :default-checked-keys="[12,13,21,22,31,32,41,42]"></el-tree>
+                        </div>
                     </div>
                 </el-card>
             </el-col>
@@ -16,7 +19,7 @@
                         <span>待办工作</span>
                     </div>
                     <div style="width: 100%;height:300px">
-                        <el-table :data="todoList" style="width: 100%;height:270px" size=mini >
+                        <el-table :data="todoList" style="width: 100%;height:270px" size=mini>
                             <el-table-column label="标题">
                                 <template slot-scope="scope">
                                     <div class="message-title">{{scope.row.title}}</div>
@@ -82,22 +85,99 @@ export default {
     },
     data() {
         return {
+            data: [{
+                    id: 1,
+                    label: '商品管理',
+                    children: [{
+                        id: 12,
+                        label: '商品出入库记录',
+                        children: [{
+                            label: '新建记录前先配置商品、客户、批发商后新建选择项时即可选择'
+                        }]
+                    }, {
+                        id: 13,
+                        label: '配置商品',
+                        children: [{
+                            label: '预警数量，当仓库低于改数量时，顶部左上角会产生一条待办提醒进货。'
+                        },
+                        ]
+                    },
+                    {
+                        id: 14,
+                        label: '预计利润',
+                        children: [{
+                            label: '预计利润为百分百，往后计算的利润都是按该百分比计算利润总额'
+                        },
+                        
+                        ]
+                    }]
+                },
+                {
+                    id: 2,
+                    label: '待办管理',
+                    children: [{
+                        id: 21,
+                        label: '待办介绍',
+                        children: [{
+                            label: '可自定义创建待办，系统在商品数量低于自定义库存警告时自动生成待办。'
+                        }]
+                    }],
+
+                },
+                {
+                    id: 3,
+                    label: '客户管理',
+                    children: [{
+                        id: 31,
+                        label: '批发商管理',
+                        children: [{
+                            label: '创建批发商后可以关联入库订单。出入库记录成功后可查看该批发商的相关订单'
+                        }]
+                    }, {
+                        id: 32,
+                        label: '客户管理',
+                        children: [{
+                            label: '创建客户成可以关联出库订单。即售出订单。出入库记录成功后可查看该客户的相关订单'
+                        }]
+                    }]
+                },
+                {
+                    id: 4,
+                    label: '收支统计',
+                    children: [{
+                        id: 41,
+                        label: '按日记录',
+                        children: [{
+                            label: '记录当天的某一笔订单金额，同一天可多次记录。'
+                        }]
+                    }, {
+                        id: 42,
+                        label: '收支分析',
+                        children: [{
+                            label: '可查看某年某月的收支信息，如无记录，则当月显示无'
+                        }]
+                    }]
+                },
+            ],
+
             userId: localStorage.getItem('userId'),
+            level: localStorage.getItem('level'),
             chartData: {
                 columns: ['季度', '该季度营业额'],
                 rows: [
-                  
+
                 ]
             },
-             comeAndOutData: {
-                columns: ['日期', '当天收入','当天支出'],
+            comeAndOutData: {
+                columns: ['日期', '当天收入', '当天支出'],
                 rows: [
-                  
+
                 ]
             },
-            todoList: [],  /*分页数据*/
+            todoList: [],
+            /*分页数据*/
             currentPage: 1,
-            pagesize: 5,
+            pagesize: 3,
             total: 0,
             currentPage: 1
         }
@@ -109,7 +189,7 @@ export default {
                 .post('/others/saveReadyDo', {
                     userId: this.userId,
                     readyDoform: this.readyDoform,
-        
+
                 })
                 .then((response) => {
                     this.reload()
@@ -117,17 +197,17 @@ export default {
                 })
                 .catch(function(error) {}.bind(this));
         },
- getQuarterInfo() { //获取季度图表信息
+        getQuarterInfo() { //获取季度图表信息
             this
                 .$axios
                 .post('/budget/getQuarterInfo', {
                     userId: this.userId,
-                    year:'2019',
-        
+                    year: '2019',
+
                 })
                 .then((response) => {
                     console.log(response.data)
-                    this.chartData.rows=response.data
+                    this.chartData.rows = response.data
 
                 })
                 .catch(function(error) {}.bind(this));
@@ -170,7 +250,7 @@ export default {
                 .post('/others/selectPage', {
                     userId: this.userId,
                     status: 'unRead',
-                    current:current
+                    current: current
                 })
                 .then((response) => {
 
@@ -194,7 +274,7 @@ export default {
                 })
                 .catch(function(error) {}.bind(this));
         },
-         getEchartsComeAndOutData() {
+        getEchartsComeAndOutData() {
             this
                 .$axios
                 .post('/budget/getEchartsComeAndOutData', {
@@ -206,6 +286,9 @@ export default {
                 })
                 .catch(function(error) {}.bind(this));
         },
+        handleNodeClick(data) {
+            console.log(data);
+        }
     }
 }
 
@@ -213,6 +296,13 @@ export default {
 <style scoped>
 .text {
     font-size: 14px;
+}
+
+.indexPtype {
+    margin: 10px;
+    font-size: 18px;
+    color: red;
+    font-weight: bold;
 }
 
 .item {

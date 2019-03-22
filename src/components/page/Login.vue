@@ -18,9 +18,12 @@
                 </div>
                 <p class="login-tips">Tips : 用户名和密码不能为空。</p>
             </el-form>
-             <el-button type="primary" @click="dialogFormVisible = true" plain>去注册</el-button>
-           
-            <el-dialog title="注册店铺账号" :visible.sync="dialogFormVisible" center>
+            <div style="position: relative;left:153px">
+
+                 <el-button @click="checkChangePasswordVisible = true" plain  style=" background: rgba(255, 255, 255, 0.5); opacity:0.5;color:red">忘记密码</el-button>
+             <el-button @click="dialogFormVisible = true" plain  style=" background: rgba(255, 255, 255, 0.5); opacity:0.5;color:red">去注册</el-button>
+           </div>
+            <el-dialog title="注册个人店铺账号" :visible.sync="dialogFormVisible" center>
               
                     <el-form ref="form" :model="form" :rules="rulesRegister" label-width="120px" status-icon>
                     <el-row>
@@ -78,17 +81,53 @@
                     </el-form-item>
                 </el-form>
             </el-dialog>
+
+
+
+               <el-dialog title="修改密码" :visible.sync="checkChangePasswordVisible" width="30%" center>
+            <el-form ref="changePwdform" :model="changePwdform" :rules="rulescheckUserId" label-width="150px" status-icon>
+                <el-row>
+                    <el-col :span="16   ">
+                        <el-form-item label="请输入你的登录账号" prop="password">
+                            <el-input size="mini" v-model="changePwdform.userId"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                </el-form> <span slot="footer" class="dialog-footer" >
+                <el-button type="primary" @click="checkIsExitUserId('changePwdform')">确 定</el-button>
+                <el-button @click="checkChangePasswordVisible = false">取 消</el-button></span>
+            </el-dialog>
+
+                <el-dialog title="修改密码" :visible.sync="changePasswordVisible" center width="30%">
+            <el-form :model="checkChangePassword" :rules="rulesChangePassword" ref="checkChangePassword" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="问题" prop="forgetQue">
+                    <el-input v-model.number="checkChangePassword.forgetQue" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="答案" prop="forgetAnsCheck">
+                    <el-input v-model.number="checkChangePassword.forgetAnsCheck"></el-input>
+                </el-form-item>
+                <el-form-item label="新密码" prop="newPassWord">
+                    <el-input v-model.number="checkChangePassword.newPassWord"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="changePassWord('checkChangePassword')">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
         </div>
     </div>
 </template>
 <script>
-    import md5 from 'js-md5';
+import md5 from 'js-md5';
 export default {
 
     data: function() {
         return {
+            changePasswordVisible:false,
+            checkChangePasswordVisible:false,
             dialogFormVisible: false,
             centerDialogVisible: false,
+            userId:'',
             ruleForm: {
                 username: '',
                 password: ''
@@ -103,6 +142,14 @@ export default {
                 forgetAns: '',
                 userPhone: ''
 
+            },
+            changePwdform:{
+                   userId:'',
+            },
+            checkChangePassword:{
+                forgetAnsCheck:'',
+                forgetQue:'',
+                newPassword:''
             },
             formLabelWidth: '120px',
             rules: {
@@ -135,7 +182,16 @@ export default {
                  userPhone: [
                     { required: true, message: '请输入你的电话', trigger: 'blur' }
                 ]
-            }
+            },
+            rulescheckUserId:{ 
+                userId: [
+                    { required: true, message: '请输入用户名', trigger: 'blur' }
+                ],
+            },
+              rulesChangePassword: {
+                forgetAnsCheck: [{ required: true, message: '请填写答案', trigger: 'blur' }],
+                newPassWord: [{ required: true, message: '请输入新密码', trigger: 'blur' }] 
+            },
         }
     },
     methods: {
@@ -152,6 +208,14 @@ export default {
                                 localStorage.setItem('ms_username', response.data.data.username);
                                 localStorage.setItem('shopName', response.data.data.shopName);
                                 localStorage.setItem('userId', response.data.data.userId);
+                                localStorage.setItem('relationUserInfoId', response.data.data.userSonInfo.relationUserInfoId);
+                                localStorage.setItem('relationUserInfoName', response.data.data.userSonInfo.relationUserInfoName);
+                                localStorage.setItem('level', response.data.data.userSonInfo.level);
+                                localStorage.setItem('goodslevel', response.data.data.userSonInfo.goodslevel);
+                                localStorage.setItem('readyDolevel', response.data.data.userSonInfo.readyDolevel);
+                                localStorage.setItem('customerlevel', response.data.data.userSonInfo.customerlevel);
+                                localStorage.setItem('comeAndOutlevel', response.data.data.userSonInfo.comeAndOutlevel);
+                                localStorage.setItem('anaylyslevel', response.data.data.userSonInfo.anaylyslevel);
                                 this.$router.push('/');
                             } else if (response.data.code === 400) {
                                   this.$message.error('账号或密码错误，请重新登录！')
@@ -182,7 +246,6 @@ export default {
                     shopName: this.form.shopName,
                     username: this.form.username,
                     userId: this.form.userId,
-
                     password: md5(this.form.password),
                     forgetQue: this.form.forgetQue,
                     forgetAns: this.form.forgetAns,
@@ -204,7 +267,62 @@ export default {
                 .catch(function(error) {
 
                 }.bind(this));
-        }})}
+        }})},
+    checkIsExitUserId(changePwdform) {
+  this.$refs[changePwdform].validate((valid) => {
+           if (valid) {
+            this
+                .$axios
+                .post('/userInfo/checkIsExitUserId', {
+                    userId: this.changePwdform.userId,
+                })
+                .then(function(response) {
+                   
+                      if (response.data.code === 200) {
+                this.checkChangePassword.forgetQue=response.data.data.forgetQue;
+this.userId=response.data.data.userId
+                this.changePasswordVisible=true
+                      }else{
+                         this.$message.error(response.data.message)
+                      }
+                  
+                }.bind(this))
+                .catch(function(error) {
+
+                }.bind(this));
+        }})},
+    changePassWord(checkChangePassword) {
+            this.$refs[checkChangePassword].validate((valid) => {
+                if (valid) {
+                    this
+                        .$axios
+                        .post('/userInfo/checkAnsToChangePassWord', {
+                            userId: this.userId,
+                         
+                           newPassWord:this.checkChangePassword.newPassWord,
+                             forgetQue:this.checkChangePassword.forgetQue,
+                               forgetAnsCheck:this.checkChangePassword.forgetAnsCheck
+
+                        })
+                        .then((response) => {
+                            if (response.data.code === 200) {
+                                this.$message.success(`修改密码成功！！`);
+                            } else {
+                                this.$message.error(`执行失败，答案错误请重试`);
+                            }
+                            this.checkChangePasswordVisible=false
+                            this.changePasswordVisible = false
+                        })
+                        .catch(function(error) {
+                            this.$message.error(`执行失败，答案错误请重试`);
+                            this.changePasswordVisible = false
+                        }.bind(this));
+                } else {
+
+                    return false;
+                }
+            });
+        }
     }
 }
 
