@@ -12,7 +12,7 @@
                 <el-button type="primary" icon="search" @click="getGoodsInfo()">搜索</el-button>
                 <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true">新增客户</el-button>
             </div>
-            <el-table :data="tableData" border class="table" style="width: 100%" height="500" size=mini>
+            <el-table :data="tableData" border class="table" style="width: 100%" height="600" size=mini>
                   
                 <el-table-column prop="linkMan" label="客户名称">
                 </el-table-column>
@@ -198,10 +198,11 @@ export default {
     methods: {
 
         /*获取商品信息*/
-        getWholesaler() {
+        getWholesaler(val) {
             this
                 .$axios
                 .post('/wholesaler/getWholesaler', {
+                    current:val,
                     userId: this.userId,
                     selectWord: this.selectWord,
                     status:'customer'
@@ -252,7 +253,7 @@ export default {
         /*分页处理*/
         handleCurrentChange(val) {
             this.currentPage = val;
-
+this.getWholesaler(val);
             console.log(`当前页: ${val}`);
         },
           /*分页处理Dialog*/

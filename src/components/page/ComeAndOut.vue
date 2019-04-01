@@ -1,4 +1,4 @@
-<template >
+<template>
     <div class="table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
@@ -9,12 +9,14 @@
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-edit" class="handle-del mr10" @click="saveBudgetDailog = true">新增记录
                 </el-button>
-                <el-input placeholder="筛选关键词" class="handle-input mr10" v-model="selectWord"></el-input>
-                <el-button type="primary" icon="search">搜索</el-button>
+               
+                <el-input placeholder="按备注查找" class="handle-input mr10" v-model="selectWord"></el-input>
+                    <el-date-picker type="date"  placeholder="按日期查找" v-model="createTime" value-format="yyyy-MM-dd"></el-date-picker>
+                <el-button type="primary" icon="search" @click="getBubgetData()">搜索</el-button>
             </div>
             <el-tabs type="border-card">
                 <el-tab-pane label="按天查看">
-                    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" stripe style="width: 100%" height="500" >
+                    <el-table :data="tableData" stripe style="width: 100%" height="500">
                         <el-table-column label="记录日期" width="180">
                             <template slot-scope="scope">
                                 <div>{{scope.row.createTime|moment1}}</div>
@@ -24,7 +26,7 @@
                         </el-table-column>
                         <el-table-column prop="outSum" label="本次支出(元)">
                         </el-table-column>
-                         <el-table-column prop="updater" label="记录人">
+                        <el-table-column prop="updater" label="记录人">
                         </el-table-column>
                         <el-table-column prop="memo" label="备注信息">
                         </el-table-column>
@@ -46,14 +48,13 @@
                         </el-pagination>
                     </div>
                 </el-tab-pane>
-              
             </el-tabs>
         </div>
         <!-- 编辑弹出框 -->
         <el-dialog title="新增/编辑记录" :visible.sync="saveBudgetDailog" width="30%">
             <el-form ref="form" :model="form" label-width="100px" :rules="rules" status-icon>
                 <el-form-item label="日期" prop="createTime">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="form.createTime"  style="width: 100%;"></el-date-picker>
+                    <el-date-picker type="date" placeholder="选择日期" v-model="form.createTime" style="width: 100%;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="本次收入" prop="inSum">
                     <el-input v-model.number="form.inSum"></el-input>
@@ -76,14 +77,15 @@
 export default {
     mounted: function() {
         this.getBubgetData();
-        this.selectPage();
+ 
         this.getOneMonthComeAndOut();
     },
     inject: ['reload'],
     data() {
         return {
-             level: localStorage.getItem('level'),
-                  relationUserInfoId: localStorage.getItem('relationUserInfoId'),
+            level: localStorage.getItem('level'),
+            relationUserInfoId: localStorage.getItem('relationUserInfoId'),
+            createTime:'',
             selectWord: "",
             selectMonth: '',
             messageTip: '',
@@ -91,8 +93,8 @@ export default {
             tableData: [],
             saveBudgetDailog: false,
             form: {
-                     updater: localStorage.getItem('relationUserInfoName'),         //默认该字段为创建人姓名
-                creator: localStorage.getItem('relationUserInfoId'),//默认该字段为创建人Id
+                updater: localStorage.getItem('relationUserInfoName'), //默认该字段为创建人姓名
+                creator: localStorage.getItem('relationUserInfoId'), //默认该字段为创建人Id
                 inSum: '',
                 outSum: '',
                 createTime: '',
@@ -103,7 +105,7 @@ export default {
                 rows: []
             },
             currentPage: 1,
-            pagesize: 8,
+            pagesize: 10,
             total: 0,
 
             rules: {
@@ -151,16 +153,21 @@ export default {
             });
 
         },
-        getBubgetData() {
+        getBubgetData(val) {
 
             this
                 .$axios
                 .post('/budget/getBubgetData', {
+                    current:val,
+                    createTime:this.createTime,
+                    selectWord:this.selectWord,
                     userId: this.userId
                 })
                 .then((response) => {
 
-                    this.tableData = response.data;
+                    this.total = response.data.total
+                    this.currentPage = response.data.current
+                    this.tableData = response.data.records
 
                 })
                 .catch(function(error) {
@@ -174,7 +181,7 @@ export default {
         },
         handleCurrentChange(val) {
             this.currentPage = val;
-            this.selectPage(val)
+            this.getBubgetData(val)
             console.log(`当前页: ${val}`);
         },
         selectPage(current) {

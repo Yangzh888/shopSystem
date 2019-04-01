@@ -14,7 +14,7 @@
                     <el-option label="入库" value="come"></el-option>
                 </el-select>
                 <el-button type="primary" icon="search" @click="getGoodsInfo()">搜索</el-button>
-                <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true">新增出入库记录</el-button>
+                <el-button type="primary" icon="insert" class="handle-del mr10" @click="handleDeleteeditVisible()">新增出入库记录</el-button>
             </div>
             <el-table :data="tableData" border class="table" style="width: 100%" height="570" size=mini>
                 <el-table-column prop="tradeName" label="商品名称">
@@ -60,7 +60,7 @@
             </div>
         </div>
         <!-- 编辑弹出框 -->
-        <el-dialog title="新增/编辑记录" :visible.sync="editVisible" width="60%" center>
+        <el-dialog title="新增/编辑记录" :visible.sync="editVisible" width="40%" center>
             <el-form ref="form" :model="form" :rules="rules" label-width="100px" status-icon>
                 <el-row>
                     <el-col :span="12">
@@ -224,7 +224,7 @@ export default {
             this
                 .$axios
                 .post('/goods/getGoodsInfo', {
-                    
+    
                     current: current,
                     userId: this.userId,
                     selectWord: this.selectWord,
@@ -280,6 +280,10 @@ export default {
             this.currentPage = val;
             this.getGoodsInfo(val);
             console.log(`当前页: ${val}`);
+        },
+        handleDeleteeditVisible(){
+            this.form.userId='';
+            this.editVisible=true;
         },
         /*编辑商品处理*/
         handleEdit(index, row) {

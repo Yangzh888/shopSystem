@@ -12,7 +12,7 @@
                     <el-button type="primary" icon="search" @click="getGoodsInfo()">搜索</el-button>
                     <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true">新增商品信息</el-button>
                 </div>
-                <el-table :data="tableData" border class="table" style="width: 100%" height="500" size=mini>
+                <el-table :data="tableData" border class="table" style="width: 100%" height="600" size=mini>
                     <el-table-column prop="tradeName" label="商品名称">
                     </el-table-column>
                     <el-table-column prop="profit" label="预期利润·单位 %">
@@ -269,10 +269,11 @@ export default {
     methods: {
 
         /*获取商品信息*/
-        getGoodsInfo() {
+        getGoodsInfo(val) {
             this
                 .$axios
                 .post('/goodsinfo/getGoodsInfo', {
+                    current:val,
                     userId: this.userId,
                     selectWord: this.selectWord
                     
@@ -350,6 +351,7 @@ export default {
         /*分页处理*/
         handleCurrentChange(val) {
             this.currentPage = val;
+            this.getGoodsInfo(val);
             console.log(`当前页: ${val}`);
         },
         /*获取商品的信息-选择框时用到-在商品配置那里配置后可以选择*/

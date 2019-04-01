@@ -16,7 +16,10 @@
                 </el-table-column>
                 <el-table-column prop="relationUserInfoId" label="子用户账号">
                 </el-table-column>
-                  <el-table-column prop="relationUserInfoName" label="子用户姓名">
+                  <el-table-column  label="子用户姓名">
+                           <template slot-scope="scope">
+                        <div>{{scope.row.relationUserInfoName}}<span v-if="scope.row.level>0" style="color: red">（管理员）</span></div>
+                    </template>
                 </el-table-column>
 
                   <el-table-column label="商品管理功能">

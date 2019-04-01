@@ -158,6 +158,7 @@ export default {
             othersIdList: [],
             userId: localStorage.getItem('userId'),
             relationUserInfoId: localStorage.getItem('relationUserInfoId'),
+            relationUserInfoName: localStorage.getItem('relationUserInfoName'),
             selectWord: '',
             unReadList: [],
             readList: [],

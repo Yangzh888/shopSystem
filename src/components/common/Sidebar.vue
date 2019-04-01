@@ -54,14 +54,15 @@ this.deleteRow();
                     icon: 'el-icon-lx-cascades',
                     index: '1',
                     title: '商品管理',
-                    subs: [{
+                    subs: [
+                      {
+                            index: 'editGoods',
+                            title: '添加商品'
+                        },{
                             index: 'goods',
                             title: '商品出入库记录'
                         },
-                        {
-                            index: 'editGoods',
-                            title: '添加商品'
-                        },
+                      
 
                     ]
                 },
@@ -143,11 +144,11 @@ this.deleteRow();
                         }
                     ]
                 },
-                /* {
+                 {
                     icon: 'el-icon-setting',
                     index: '/search',
                     title: '查找'
-                },*/
+                },
             ]
 
         }
@@ -185,11 +186,12 @@ this.deleteRow();
         this.items.push(this.tab[i]);
       }
     }
-             if(this.level>0){  this.items.push(this.tab[6]); }
-             this.items.push(this.tab[7]); 
+             if(this.level>0){  this.items.push(this.tab[6]); this.items.push(this.tab[7]);    }
+             
             
             }
     }
+
 }
 
 </script>
