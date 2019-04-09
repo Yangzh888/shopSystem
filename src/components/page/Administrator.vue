@@ -7,8 +7,8 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="selectWord" placeholder="通过子用户名称或者登陆账号搜索" class="handle-input mr10" @keyup.enter.native="getPermissionInfo"></el-input>
-                <el-button type="primary" icon="search" @click="getPermissionInfo()">搜索</el-button>
+                <el-input v-model="selectWord" placeholder="通过子用户名称或者登陆账号搜索" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="search">搜索</el-button>
                 <el-button type="primary" icon="insert" class="handle-del mr10" @click="editVisible = true" v-if="level<2">新增子用户</el-button>
             </div>
             <el-table :data="tableData" border class="table" style="width: 100%" height="570" size=mini>
@@ -18,7 +18,7 @@
                 </el-table-column>
                   <el-table-column  label="子用户姓名">
                            <template slot-scope="scope">
-                        <div>{{scope.row.relationUserInfoName}}<span v-if="scope.row.level>0" style="color: red">（管理员）</span></div>
+                        <div>{{scope.row.relationUserInfoName}}<span v-if="scope.row.level>0" style="color: red">（普通管理员）</span></div>
                     </template>
                 </el-table-column>
 
@@ -55,85 +55,12 @@
                 </el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"  v-if="userId!==scope.row.relationUserInfoId">编辑</el-button>
-
-                            <el-button type="text" icon="el-icon-edit" @click="handleEditPassword(scope.row.relationUserInfoId)"  v-if="userId!==scope.row.relationUserInfoId">修改密码</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEditPassword(scope.row.relationUserInfoId)"  v-if="userId!==scope.row.relationUserInfoId">修改密码</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.relationUserInfoId)"  v-if="userId!==scope.row.relationUserInfoId">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-dialog title="编辑/新增子用户信息" :visible.sync="editVisible" width="30%" center>
-                <el-form ref="form" :model="form" :rules="rules" label-width="110px" status-icon>
-                    <el-row>
-                        <el-col :span="24">
-                            <el-form-item label="创建日期" prop="createTime">
-                                <el-date-picker size=mini type="date" placeholder="选择日期" v-model="form.createTime" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="子用户账号" prop="relationUserInfoId">
-                                <el-input size="mini" v-model="form.relationUserInfoId"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="子用户密码" prop="password">
-                                <el-input size="mini" v-model="form.password"></el-input>
-                                </el-switch>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="子用户名称" prop="relationUserInfoName">
-                                <el-input size="mini" v-model="form.relationUserInfoName"></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="商品管理功能" prop="goodslevel">
-                                <el-switch v-model="form.goodslevel">
-                                </el-switch>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="待办管理功能" prop="readyDolevel">
-                                <el-switch v-model="form.readyDolevel">
-                                </el-switch>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="客户功能" prop="customerlevel">
-                                <el-switch v-model="form.customerlevel">
-                                </el-switch>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="收支管理功能" prop="comeAndOutlevel">
-                                <el-switch v-model="form.comeAndOutlevel">
-                                </el-switch>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="数据分析功能" prop="anaylyslevel">
-                                <el-switch v-model="form.anaylyslevel">
-                                </el-switch>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                </el-form>
-                <span slot="footer" class="dialog-footer" >
-                <el-button type="primary" @click="saveUserSonInfo('form')">确 定</el-button>
-                <el-button @click="editVisible = false">取 消</el-button>
-                
-            </span>
-            </el-dialog>
+           
                 <!-- 删除提示框 -->
         <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
             <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
@@ -163,7 +90,7 @@ import md5 from 'js-md5';
 export default {
     inject: ['reload'],
     mounted: function() {
-        this.getPermissionInfo();
+      
         this.getAllUserInfo();
 
     },
@@ -212,25 +139,6 @@ export default {
         }
     },
     methods: {
-
-        /*获取子用户信息*/
-        getPermissionInfo() {
-            this
-                .$axios
-                .post('/relationuserinfo/getUserSonInfo', {
-                    userId: this.userId,
-                    selectWord: this.selectWord,
-
-                })
-                .then((response) => {
-                    console.log(response.data)
-                    this.total = response.data.length
-                    this.tableData = response.data
-
-                })
-                .catch(function(error) {}.bind(this));
-
-        },
         getAllUserInfo(){
         //超级管理员专用
          //超级管理员获取所有账户信息
@@ -249,66 +157,8 @@ export default {
                 .catch(function(error) {}.bind(this));
          }
         },
-        /*保存子用户信息*/
-        saveUserSonInfo(form) {
-            this.$refs[form].validate((valid) => {
-                if (valid) {
-                    this
-                        .$axios
-                        .post('/relationuserinfo/saveUserSonInfo', {
-                            userId: this.userId,
-                            createTime: this.form.createTime,
-                            relationUserInfoId: this.form.relationUserInfoId,
-                            password: md5(this.form.password),
-                            relationUserInfoName: this.form.relationUserInfoName,
-                            goodslevel: this.form.goodslevel,
-                            comeAndOutlevel: this.form.comeAndOutlevel,
-                            anaylyslevel: this.form.anaylyslevel,
-                            readyDolevel: this.form.readyDolevel,
-                            customerlevel: this.form.customerlevel,
-                            permissionlevel:this.form.permissionlevel,
-                            level: this.form.level,
-                        })
-                        .then((response) => {
-                            console.log(response.data);
-                            if (response.data.code === 200) {
-                                this.$message.success(response.data.message);
-                                this.editVisible = false;
-                                this.reload();
-                            } else {
-                                this.$message.error(response.data.message);
-                            }
-
-                            this.reload();
-
-                        })
-                        .catch(function(error) {}.bind(this));
-                } else {
-
-                    return false;
-                }
-            });
-
-        },
-            handleEdit(index, row) {
-            this.idx = index;
-            const item = this.tableData[index];
-            this.form = {
-                userId: item.userId,
-                userSonId: item.userSonId,
-                createTime: item.createTime,
-                password:'******',
-                relationUserInfoId: item.relationUserInfoId,
-                relationUserInfoName: item.relationUserInfoName,
-                goodslevel: item.goodslevel,
-                readyDolevel: item.readyDolevel,
-                customerlevel: item.customerlevel,
-                comeAndOutlevel: item.comeAndOutlevel,
-                anaylyslevel: item.anaylyslevel,
-                permissionlevel:item.permissionlevel, 
-            }
-            this.editVisible = true;
-        },
+       
+            
         //修改密码用
         handleEditPassword(relationUserInfoId) {
           
@@ -346,8 +196,7 @@ export default {
                 if (valid) {
                     this
                         .$axios
-                        .post('/relationuserinfo/updateUserSonPassword', {
-                            userId: this.userId,
+                        .post('/relationuserinfo/updatePasswordByAdministrator', {
                             relationUserInfoId: this.relationUserInfoId,
                             password:md5(this.form1.password)
             

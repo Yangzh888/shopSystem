@@ -149,6 +149,11 @@ this.deleteRow();
                     index: '/search',
                     title: '查找'
                 },
+                 {
+                    icon: 'el-icon-setting',
+                    index: 'administrator',
+                    title: '权限管理'
+                },
             ]
 
         }
@@ -186,8 +191,11 @@ this.deleteRow();
         this.items.push(this.tab[i]);
       }
     }
-             if(this.level>0){  this.items.push(this.tab[6]); this.items.push(this.tab[7]);    }
-             
+             if(this.level>0){  this.items.push(this.tab[6]); this.items.push(this.tab[7]); }
+             if(this.level==='2'){
+                this.items.length = 0;
+                 this.items.push(this.tab[9]); 
+             }
             
             }
     }

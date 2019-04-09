@@ -108,6 +108,12 @@ export default new Router({
                     component: resolve => require(['../components/page/Permission.vue'], resolve),
                     meta: { title: '权限管理', permission: true }
                 },
+                   {
+                    // 超级管理员权限页面
+                    path: '/administrator',
+                    component: resolve => require(['../components/page/Administrator.vue'], resolve),
+                    meta: { title: '超级管理员权限页面', permission: true }
+                },
                 {
                     path: '/404',
                     component: resolve => require(['../components/page/404.vue'], resolve),
