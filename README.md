@@ -32,4 +32,18 @@
 
 
 ## 系统界面及功能 ##
-    ![图片加载失败](https://github.com//Yangzh888/shopSystem/raw/master/readmeImg/addGoods.png)
+
+   ### 系统首页 ###
+ ![Image text](https://github.com/Yangzh888/shopSystem/blob/master/readmeImg/index.png)
+ ### 添加商品页面 ###
+ ![Image text](https://github.com/Yangzh888/shopSystem/blob/master/readmeImg/addGoods.png)
+ ### 待办页面 ###
+ ![Image text](https://github.com/Yangzh888/shopSystem/blob/master/readmeImg/readyDo.png)
+ ### 待办页面2 ###
+ ![Image text](https://github.com/Yangzh888/shopSystem/blob/master/readmeImg/readyDo2.png)
+ ### 收支页面 ###
+ ![Image text](https://github.com/Yangzh888/shopSystem/blob/master/readmeImg/comeAndOut.png)
+ ### 数据分析页面 ###
+ ![Image text](https://github.com/Yangzh888/shopSystem/blob/master/readmeImg/analysis.png)
+ ### 权限页面 ###
+ ![Image text](https://github.com/Yangzh888/shopSystem/blob/master/readmeImg/permission.png)
