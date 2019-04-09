@@ -31,3 +31,5 @@
 	npm run build
 
 
+## 系统界面及功能 ##
+    ![图片加载失败](https://github.com/Yangzh888/shopSystem/tree/master/readmeImg/addGoods.png)
